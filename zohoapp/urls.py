@@ -7,11 +7,15 @@ from django.views.static import serve
 from .views import EmailAttachementView
 
 urlpatterns = [
+    
     path('', views.index, name='index'),
     path('register', views.register, name='register'),
     path('login', views.login, name='login'),
     path('base', views.base, name='base'),
     path('logout', views.logout, name='logout'),
+    path('forgotpassword' , views.forgotpassword,name='forgotpassword'),  
+    path('setnewpassword' , views.setnewpassword,name='setnewpassword'),   
+
     path('view_profile', views.view_profile, name='view_profile'),
     path('edit_profile/<pk>', views.edit_profile, name='edit_profile'),
     path('itemview',views.itemview,name='itemview'),
@@ -99,6 +103,7 @@ urlpatterns = [
     path('save_edit_bnk/<int:id>',views.save_edit_bnk,name='save_edit_bnk'),
     path('save_banking_edit/<int:id>',views.save_banking_edit,name='save_banking_edit'),
     path('save_bank',views.save_bank,name='save_bank'),
+    path('banking_delete/<int:id>',views.banking_delete,name='banking_delete'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

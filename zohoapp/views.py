@@ -19,10 +19,7 @@ def index(request):
 
     return render(request,'index.html')
 
-
-
 def register(request):
-   
     if request.method=='POST':
 
         first_name=capfirst(request.POST['fname'])
@@ -50,14 +47,13 @@ def register(request):
                 u = User.objects.get(id = user.id)
 
                 company_details(contact_number = phone, user = u).save()
-    
         else:
             messages.info(request, 'Password doesnt match!!!!!!!')
             print("Password is not Matching.. ") 
             return redirect('register')   
         return redirect('register')
 
-    return render(request,'register.html')
+    return render(request,'register.html',{'msg' : messages})
 
 def login(request):
         
@@ -65,7 +61,7 @@ def login(request):
         
         email_or_username = request.POST['emailorusername']
         password = request.POST['password']
-
+        print(password)
         user = authenticate(request, username=email_or_username, password=password)
         print(user)
         if user is not None:
@@ -81,10 +77,29 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
+def forgotpassword(request):
+     return render(request,'setpassword.html')
+
+def setnewpassword(request):
+
+    if request.method=='POST':
+        email_or_username = request.POST['emailorusername']
+        password=request.POST['password']
+        cpassword=request.POST['cpassword']
+        if password==cpassword:
+
+            c = User.objects.filter(Q(username = email_or_username)|Q(email = email_or_username)).first()
+            c.set_password(password)
+            c.save()
+
+        return redirect('register' )
+        
+    else:
+        return render(request, 'setpassword.html')
+
 @login_required(login_url='login')
 def base(request):
    
-       
     if not Unit.objects.filter(unit='BOX').exists():
             Unit(unit='BOX').save()
     if not Unit.objects.filter(unit='UNIT').exists():
@@ -141,18 +156,21 @@ def edit_profile(request,pk):
 
         user1.first_name = capfirst(request.POST.get('f_name'))
         user1.last_name  = capfirst(request.POST.get('l_name'))
-        user1.username = request.POST.get('uname')
-        # pat.age = request.POST.get('age')
-        # pat.address = capfirst(request.POST.get('address'))
-        # pat.gender = request.POST.get('gender')
-        # user1.email = request.POST.get('email')
-        # pat.email = request.POST.get('email')
-        # pat.contact_num = request.POST.get('cnum')
-        # #fkey1= request.POST.get('doc')
-        # #pat.doctor = doctor.objects.get(id = fkey1)
-        # if len(request.FILES)!=0 :
-        #     doc.profile_pic = request.FILES.get('file')
-
+        user1.email = request.POST.get('email')
+        company.contact_number = request.POST.get('cnum')
+        company.address = capfirst(request.POST.get('ards'))
+        company.company_name = request.POST.get('comp_name')
+        company.company_email = request.POST.get('comp_email')
+        company.city = request.POST.get('city')
+        company.state = request.POST.get('state')
+        company.country = request.POST.get('country')
+        company.pincode = request.POST.get('pinc')
+        company.gst_num = request.POST.get('gst')
+        company.pan_num = request.POST.get('pan')
+        company.business_name = request.POST.get('bname')
+        company.company_type = request.POST.get('comp_type')
+        if len(request.FILES)!=0 :
+            company.profile_pic = request.FILES.get('file')
 
         company.save()
         user1.save()
@@ -162,9 +180,7 @@ def edit_profile(request,pk):
         'company' : company,
         'user1' : user1,
     }
-    context = {
-                'company' : company,
-            }
+    
     return render(request,'edit_profile.html',context)
 
 @login_required(login_url='login')
@@ -713,7 +729,7 @@ def retainer_invoice(request):
 
 @login_required(login_url='login')
 def add_invoice(request):
-    customer=Customer.objects.all()   
+    customer=customer.objects.all()   
     context={'customer':customer,}    
     return render(request,'add_invoice.html',context)
 
@@ -1965,13 +1981,15 @@ def delete_item(request,id):
 
 
 def banking_home(request):
-  
+    company = company_details.objects.get(user = request.user)
     viewitem=banking.objects.filter(user=request.user)
-    return render(request,'banking.html',{'view':viewitem})       
+    return render(request,'banking.html',{'view':viewitem,"company":company})       
     
 def create_banking(request):
+    company = company_details.objects.get(user = request.user)
+    print(company.company_name)
     banks = bank.objects.filter(user=request.user, acc_type="bank")
-    return render(request,'create_banking.html',{"bank":banks})    
+    return render(request,'create_banking.html',{"bank":banks,"company":company})    
 
 def save_banking(request):
     if request.method == "POST":
@@ -1998,6 +2016,7 @@ def save_banking(request):
         a.bd_reg_typ = request.POST.get('register_type',None)
         a.bd_gst_no = request.POST.get('gstin',None)
         a.bd_gst_det = request.POST.get('gst_det',None)
+        a.opening_blnc_type = request.POST.get('opening_blnc_type',None)
         a.user=request.user
         a.opening_bal = request.POST.get('balance',None)
         a.save()
@@ -2007,18 +2026,22 @@ def save_banking(request):
 def view_bank(request,id):
     viewitem=banking.objects.filter(user=request.user)
     bnk=banking.objects.get(id=id,user=request.user)
+    company = company_details.objects.get(user = request.user)
     context={
         'view':viewitem,
         'bnk':bnk,
+        "company":company
     }
     return render(request,"view_bank.html",context)
 
 def banking_edit(request,id):
     bnk=banking.objects.get(id=id,user=request.user)
     banks = bank.objects.filter(user=request.user, acc_type="bank")
+    company = company_details.objects.get(user = request.user)
     context={
         'bnk':bnk,
-        "bank":banks
+        "bank":banks,
+        "company":company
     }
     return render(request,"edit_banking.html",context)
 
@@ -2048,6 +2071,7 @@ def save_edit_bnk(request,id):
         a.bd_gst_no = request.POST.get('gstin',None)
         a.bd_gst_det = request.POST.get('gst_det',None)
         a.opening_bal = request.POST.get('balance',None)
+        a.opening_blnc_type = request.POST.get('opening_blnc_type',None)
         a.save()
         return redirect("banking_home")
     return redirect("create_banking")
@@ -2073,7 +2097,13 @@ def save_banking_edit(request,id):
     
 def basenav(request):
     company = company_details.objects.get(user = request.user)
+    print(company.company_name)
     context = {
                 'company' : company
             }
     return render(request,'base.html',context)
+
+def banking_delete(request,id):
+    bnk=banking.objects.get(id=id)
+    bnk.delete()
+    return redirect("banking_home")
