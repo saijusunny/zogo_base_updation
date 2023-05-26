@@ -2107,3 +2107,21 @@ def banking_delete(request,id):
     bnk=banking.objects.get(id=id)
     bnk.delete()
     return redirect("banking_home")
+
+# delivery cghellan
+
+def create_delivery_chellan(request):
+    user = request.user
+    # print(user_id)
+    company = company_details.objects.get(user=user)
+    items = AddItem.objects.filter(user_id=user.id)
+    customers = customer.objects.filter(user_id=user.id)
+    estimates_count = Estimates.objects.count()
+    next_count = estimates_count+1
+    context = {'company': company,
+               'items': items,
+               'customers': customers,
+               'count': next_count,
+               }
+
+    return render(request, 'create_delivery_chellan.html', context)

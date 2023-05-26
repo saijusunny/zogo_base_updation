@@ -104,7 +104,7 @@ urlpatterns = [
     path('save_banking_edit/<int:id>',views.save_banking_edit,name='save_banking_edit'),
     path('save_bank',views.save_bank,name='save_bank'),
     path('banking_delete/<int:id>',views.banking_delete,name='banking_delete'),
-    
+    path('create_delivery_chellan',views.create_delivery_chellan,name='create_delivery_chellan'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     
