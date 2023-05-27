@@ -192,224 +192,233 @@
 </script>
 
 
-<section>
-    <div class="fixed-top  " style="top: 7rem; margin-left: 20rem;">
+<div class="row  ml-2">
+    <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> New
+            Delivery Chellan</a></div>
+    <input type="hidden" id="state" value="{{ company.state }}">
+</div>
 
 
-        <div class="row  ml-2">
-            <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> New
-                    Delivery Chellan</a></div>
-            <input type="hidden" id="state" value="{{ company.state }}">
+<form method="POST" action="" enctype="multipart/form-data" novalidate
+    id="forms">
+    {% csrf_token %}
+    <div class="row mb-4 border-top pt-5">
+        <div class="col-sm-2"><label for="chellan_number">Delivery Challan#*</label></div>
+        <div class="col-sm-10"><input type="text" id="chellan_number" name="chellan_number" class=""
+                value="{{count}}" style="width: 38%;height: 35px;">
+            
         </div>
-
-        <div style="height: 600px; overflow-y: scroll;">
-            <form method="POST" action="" class="p-5" enctype="multipart/form-data" novalidate
-                id="forms">
-                {% csrf_token %}
-                <div class="row mb-4 border-top pt-5">
-                    <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
-                    <div class="col-sm-10">
-                        <select class="" id="customer_sel" name="customer_name" style="width: 50%;height: 35px;">
-                            <option>Select Customer</option>
-                            {% for cust in customers %}
-                            <option value="{{cust.customerName}}" data-pos="{{cust.placeofsupply}}">
-                                {{cust.customerName}}</option>
-                            {% endfor %}
-                        </select>
-                        <a href="{% url 'add_customer_for_estimate'  %}"><i class="fa-solid fa-plus p-2 rounded"
-                                style="color: white; background-color: rgb(210, 132, 30);height: 35px;"></i></a>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-sm-2"><label for="estimate_number">Estimate#*</label></div>
-                    <div class="col-sm-10"><input type="text" id="estimate_number" name="estimate_number" class=""
-                            value="{{count}}" style="width: 38%;height: 35px;">
-                        <a class="btn " id="estimate-num" onclick="showPopup()"
-                            style="color: white; background-color: rgb(210, 132, 30);height: 35px;"><i
-                                class="fas fa-cog "></i></a>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-sm-2"><label for="reference">Reference#</label></div>
-                    <div class="col-sm-10"> <input type="number" id="reference" name="reference" class=""
-                            style="width: 38%;height: 35px;"></div>
-                </div>
-                <div class="row mb-4 border-bottom pb-5">
-                    <div class="col-sm-2"><label for="reference">Estimate Date*</label></div>
-                    <div class="col-sm-4"> <input type="date" id="estimate_date" name="estimate_date" class=""
-                            style="width: 100%;height: 35px;">
-                    </div>
-                    <div class="col-sm-2 text-right"><label for="reference">Expiry Date</label></div>
-                    <div class="col-sm-4"> <input type="date" id="expiry_date" name="expiry_date" class=""
-                            style="width: 60%;height: 35px;"></div>
-                </div>
-
-                <label for="">Price List</label><br>
-                <table class="table  text-black" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);"
-                    onchange="calc()">
-                    <thead>
-                        <tr>
-                            <th>Item Details <a href="{% url 'additem_page_est' %}"><i class="fas fa-plus p-2 rounded"
-                                        style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
-                            <th class="text-right">Quantity</th>
-                            <th class="text-right">Rate</th>
-                            <th class="text-right">Discount</th>
-                            <th class="text-right">Tax</th>
-                            <th class="text-right">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        <tr id='row1'>
-                            <td>
-                                <div class='form-group'><select
-                                        class='form-control bg-transparent text-black border-0 item_select itm'
-                                        name='item[]' id='item1'>
-                                        <option class='text-dark'>Select Items</option>
-                                        {% for i in items %}
-                                        <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
-                                        {% endfor %}
-                                    </select></div>
-                            </td>
-                            <td class='text-right'><input type='number' id='qty1'
-                                    class='bg-transparent border-0 text-black text-right qty' name='quantity[]'
-                                    value='0'>
-                            </td>
-                            <td class='text-right'><input type='number' id='rate1'
-                                    class='bg-transparent border-0 text-black text-right rate' name='rate[]'
-                                    value='0.00'>
-                            </td>
-                            <td class='text-right'><input type='number' id='discount1'
-                                    class='bg-transparent border-0 text-black text-right discount' name='discount[]'
-                                    value='0.00'>
-                            </td>
-                            <td class='text-right'> <select name='tax[]' id='tax1'
-                                    class='form-control bg-transparent text-black text-right border-0 tax'>
-                                    <option value=0>Non Taxable</option>
-                                    <option value=0>0% GST/IGST</option>
-                                    <option value=5>5% GST/IGST</option>
-                                    <option value=12>12% GST/IGST</option>
-                                    <option value=18>18% GST/IGST</option>
-                                    <option value=28>28% GST/IGST</option>
-
-
-                                    <option value=0>Out of Scope(0%)</option>
-                                </select></td>
-                            <td style="display: none;">
-                                <input type="number" name='taxamount[]' id="taxamount1"
-                                    class="form-control taxamount" />
-                            </td>
-                            <td class='text-right'><input type='number' id='amount1'
-                                    class='bg-transparent border-0 text-black text-right amount' name='amount[]'
-                                    value='0.00'></td>
-                            <td class='text-center'><button type='button' id='del_btn1'
-                                    class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
-                                    style='width:30px'><i class='fa fa-times'></i></button></td>
-                        </tr>
-                    </tbody>
-
-                </table>
-                <button type="button" class="btn btn-sm text-white" style="background-color: rgb(210, 132, 30) ;"
-                    id="add-row">Add another line</button>
-
-                <div class="row border-bottom pb-5">
-                    <div class="col-sm-6 d-flex flex-column mt-auto">
-
-                        <label for="">Customer Notes</label>
-                        <textarea name="customer_note" id="" cols="8" rows="3"
-                            placeholder=" Will be Displayed on the Estimate"></textarea>
-                    </div>
-                    <div class="col-sm-6">
-                        <table class=" table  text-black" style="background-color: rgba(250, 227, 198, 0.8);">
-                            <tr>
-                                <td>Sub Total</td>
-                                <td></td>
-                                <td><input type="number" id="subtotal" name="subtotal" step="any" value="0.00"
-                                        class="bg-transparent border-0 text-right subtotal"></td>
-                            </tr>
-                            <tr style="display: none;" id="tr_igst">
-                                <td>IGST</td>
-                                <td></td>
-                                <td><input type="number" id='igst' name="igst" step="any" value="0.00"
-                                        class="form-control bg-transparent border-0 text-right igst" ></td>
-                            </tr>
-                            <tr style="display: none;" id="tr_cgst">
-                                <td>CGST</td>
-                                <td></td>
-                                <td><input type="number" id='cgst' name="cgst" step="any" value="0.00"
-                                        class="form-control bg-transparent border-0 text-right cgst" ></td>
-                            </tr>
-                            <tr style="display: none;" id="tr_sgst">
-                                <td>SGST</td>
-                                <td></td>
-                                <td><input type="number" id='sgst' name="sgst" step="any" value="0.00"
-                                        class="form-control bg-transparent border-0 text-right sgst" ></td>
-                            </tr>
-                            <tr>
-                                <td>Tax Amount</td>
-                                <td></td>
-                                <td><input type="number" id="total_taxamount" name="total_taxamount" step="any" value="0.00" 
-                                    class="total_taxamount form-control bg-transparent border-0 text-right"></td>
-                            </tr>
-                            <tr>
-                                <td>Shipping Charges</td>
-                                <td><input type="number" id="shipping"> <i class="fas fa-question"></i></td>
-                                <td><input type="text" id="shipping_charge" name="shipping_charge" step="any" value="0.00" 
-                                    class="form-control bg-transparent border-0 text-right shipping_charge"></td>
-                            </tr>
-                            <tr>
-                                <td>Adjustmment</td>
-                                <td><input type="number" id="adjustment"> <i class="fas fa-question"></i></td>
-                                <td><input type="text" id="adjustment_charge" name="adjustment_charge" step="any" value="0.00" 
-                                    class="form-control bg-transparent border-0 text-right adjustment"> </td>
-                            </tr>
-                            <tr>
-                                <th>Total ( &#x20B9; )</th>
-                                <th></th>
-                                <th><input type="number" id="total" name="total" step="any" value="0.00" 
-                                        class="form-control bg-transparent border-0 text-right total"></th>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row py-5 border-bottom">
-                    <div class="col-md-8 d-flex flex-column w-60 text-black">
-                        <label for="">Terms & Conditions</label>
-                        <textarea name="tearms_conditions" id="" cols="20" rows="5"
-                            placeholder=" Enter the terms & conditions of your business to be displayed in your transaction."></textarea>
-                    </div>
-                    <div class="col-md-4 py-5 text-center rounded" style="background-color: rgba(250, 227, 198, 0.8);">
-                        <label class="text-dark" for="">Attach File(s) to Estimate</label><br>
-
-                        <label for="file-upload" class="btn text-white border-0"
-                            style="background-color: rgb(210, 132, 30);">
-                            <i class="fas fa-upload text-white"></i> Upload File
-                        </label>
-                        <input id="file-upload" type="file" name="file" style="display:none;">
-
-
-
-                    </div>
-                </div>
-
-                <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " 
-                onclick="saveAsDraftDialog()" value="Save As Draft">
-                <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
-                    onclick="saveAndSendDialog()" value="Save And Send">
-                <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; "
-                    onclick="cancelDialog()" value="Cancel">
-            </form>
-
-
-
-        </div>
-
     </div>
 
+    <div class="row mb-4">
+        <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
+        <div class="col-sm-10">
+            <select class="" id="customer_sel" name="customer_name" style="width: 50%;height: 35px;">
+                <option>Select Customer</option>
+                {% for cust in customers %}
+                <option value="{{cust.customerName}}" data-pos="{{cust.placeofsupply}}">
+                    {{cust.customerName}}</option>
+                {% endfor %}
+            </select>
+            <a href="{% url 'add_customer_for_challan'  %}"><i class="mdi mdi-plus p-2 rounded"
+                    style="color: white; background-color: rgb(210, 132, 30);height: 35px;"></i></a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-sm-2"><label for="customer_mail">Customer Mailid</label></div>
+        <div class="col-sm-10">
+            <input type="email" id="customer_mail" name="customer_mail" class=""
+                style="width: 50%;height: 35px;">
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-sm-2"><label for="reference">Reference#</label></div>
+        <div class="col-sm-10"> <input type="number" id="reference" name="reference" class=""
+                style="width: 38%;height: 35px;"></div>
+    </div>
+    <div class="row mb-4 border-bottom pb-5">
+        <div class="col-sm-2"><label for="reference">Delivery Challan Date*</label></div>
+        <div class="col-sm-4"> <input type="date" id="chellan_date" name="chellan_date" class=""
+                style="width: 100%;height: 35px;">
+        </div>
+      
+    </div>
+
+    <div class="row mb-4 border-bottom pb-4">
+        <div class="col-sm-2"><label for="chellan_type">Challan type</label></div>
+        <div class="col-sm-10">
+            <select class="" id="customer_sel" name="chellan_type" style="width: 50%;height: 35px;">
+                <option>Challan type</option>
+              
+                <option value="Supplay Of Liquid Gas">Supplay Of Liquid Gas</option>
+                <option value="Job Work">Job Work</option>
+                <option value="Supplay Of Approval">Supplay Of Approval</option>
+                <option value="Others">Others</option>
+               
+            </select>
+        </div>
+    </div>
+
+    <label for="">Price List</label><br>
+    <table class="table  text-black" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);"
+        onchange="calc()">
+        <thead>
+            <tr>
+                <th>Item Details <a href="{% url 'additem_page_challan' %}"><i class="mdi mdi-plus p-2 rounded"
+                            style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Rate</th>
+                <th class="text-right">Discount</th>
+                <th class="text-right">Tax</th>
+                <th class="text-right">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr id='row1'>
+                <td>
+                    <div class='form-group'><select
+                            class='form-control bg-transparent text-black border-0 item_select itm'
+                            name='item[]' id='item1'>
+                            <option class='text-dark'>Select Items</option>
+                            {% for i in items %}
+                            <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+                            {% endfor %}
+                        </select></div>
+                </td>
+                <td class='text-right'><input type='number' id='qty1'
+                        class='bg-transparent border-0 text-black text-right qty' name='quantity[]'
+                        value='0'>
+                </td>
+                <td class='text-right'><input type='number' id='rate1'
+                        class='bg-transparent border-0 text-black text-right rate' name='rate[]'
+                        value='0.00'>
+                </td>
+                <td class='text-right'><input type='number' id='discount1'
+                        class='bg-transparent border-0 text-black text-right discount' name='discount[]'
+                        value='0.00'>
+                </td>
+                <td class='text-right'> <select name='tax[]' id='tax1'
+                        class='form-control bg-transparent text-black text-right border-0 tax'>
+                        <option value=0>Non Taxable</option>
+                        <option value=0>0% GST/IGST</option>
+                        <option value=5>5% GST/IGST</option>
+                        <option value=12>12% GST/IGST</option>
+                        <option value=18>18% GST/IGST</option>
+                        <option value=28>28% GST/IGST</option>
 
 
-</section>
+                        <option value=0>Out of Scope(0%)</option>
+                    </select></td>
+                <td style="display: none;">
+                    <input type="number" name='taxamount[]' id="taxamount1"
+                        class="form-control taxamount" />
+                </td>
+                <td class='text-right'><input type='number' id='amount1'
+                        class='bg-transparent border-0 text-black text-right amount' name='amount[]'
+                        value='0.00'></td>
+                <td class='text-center'><button type='button' id='del_btn1'
+                        class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
+                        style='width:30px'><i class='fa fa-times'></i></button></td>
+            </tr>
+        </tbody>
+
+    </table>
+    <button type="button" class="btn btn-sm text-white" style="background-color: rgb(210, 132, 30) ;"
+        id="add-row">Add another line</button>
+
+    <div class="row border-bottom pb-5">
+        <div class="col-sm-6 d-flex flex-column mt-auto">
+
+            <label for="">Customer Notes</label>
+            <textarea name="customer_note" id="" cols="8" rows="3"
+                placeholder=" Will be Displayed on the Estimate"></textarea>
+        </div>
+        <div class="col-sm-6">
+            <table class=" table  text-black" style="background-color: rgba(250, 227, 198, 0.8);">
+                <tr>
+                    <td>Sub Total</td>
+                    <td></td>
+                    <td><input type="number" id="subtotal" name="subtotal" step="any" value="0.00"
+                            class="bg-transparent border-0 text-right subtotal"></td>
+                </tr>
+                <tr style="display: none;" id="tr_igst">
+                    <td>IGST</td>
+                    <td></td>
+                    <td><input type="number" id='igst' name="igst" step="any" value="0.00"
+                            class="form-control bg-transparent border-0 text-right igst" ></td>
+                </tr>
+                <tr style="display: none;" id="tr_cgst">
+                    <td>CGST</td>
+                    <td></td>
+                    <td><input type="number" id='cgst' name="cgst" step="any" value="0.00"
+                            class="form-control bg-transparent border-0 text-right cgst" ></td>
+                </tr>
+                <tr style="display: none;" id="tr_sgst">
+                    <td>SGST</td>
+                    <td></td>
+                    <td><input type="number" id='sgst' name="sgst" step="any" value="0.00"
+                            class="form-control bg-transparent border-0 text-right sgst" ></td>
+                </tr>
+                <tr>
+                    <td>Tax Amount</td>
+                    <td></td>
+                    <td><input type="number" id="total_taxamount" name="total_taxamount" step="any" value="0.00" 
+                        class="total_taxamount form-control bg-transparent border-0 text-right"></td>
+                </tr>
+                <tr>
+                    <td>Shipping Charges</td>
+                    <td><input type="number" id="shipping"> <i class="fas fa-question"></i></td>
+                    <td><input type="text" id="shipping_charge" name="shipping_charge" step="any" value="0.00" 
+                        class="form-control bg-transparent border-0 text-right shipping_charge"></td>
+                </tr>
+                <tr>
+                    <td>Adjustmment</td>
+                    <td><input type="number" id="adjustment"> <i class="fas fa-question"></i></td>
+                    <td><input type="text" id="adjustment_charge" name="adjustment_charge" step="any" value="0.00" 
+                        class="form-control bg-transparent border-0 text-right adjustment"> </td>
+                </tr>
+                <tr>
+                    <th>Total ( &#x20B9; )</th>
+                    <th></th>
+                    <th><input type="number" id="total" name="total" step="any" value="0.00" 
+                            class="form-control bg-transparent border-0 text-right total"></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row py-5 border-bottom">
+        <div class="col-md-8 d-flex flex-column w-60 text-black">
+            <label for="">Terms & Conditions</label>
+            <textarea name="tearms_conditions" id="" cols="20" rows="5"
+                placeholder=" Enter the terms & conditions of your business to be displayed in your transaction."></textarea>
+        </div>
+        <div class="col-md-4 py-5 text-center rounded" style="background-color: rgba(250, 227, 198, 0.8);">
+            <label class="text-dark" for="">Attach File(s) to Estimate</label><br>
+
+            <label for="file-upload" class="btn text-white border-0"
+                style="background-color: rgb(210, 132, 30);">
+                <i class="fas fa-upload text-white"></i> Upload File
+            </label>
+            <input id="file-upload" type="file" name="file" style="display:none;">
+
+
+
+        </div>
+    </div>
+
+    <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " 
+    onclick="saveAsDraftDialog()" value="Save As Draft">
+    <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
+        onclick="saveAndSendDialog()" value="Save And Send">
+    <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; "
+        onclick="cancelDialog()" value="Cancel">
+</form>
+
+
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

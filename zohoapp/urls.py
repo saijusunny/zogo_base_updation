@@ -104,7 +104,14 @@ urlpatterns = [
     path('save_banking_edit/<int:id>',views.save_banking_edit,name='save_banking_edit'),
     path('save_bank',views.save_bank,name='save_bank'),
     path('banking_delete/<int:id>',views.banking_delete,name='banking_delete'),
+
+    ####challan
     path('create_delivery_chellan',views.create_delivery_chellan,name='create_delivery_chellan'),
+    path('delivery_chellan_home',views.delivery_chellan_home,name='delivery_chellan_home'),
+    path('add_customer_for_challan',views.add_customer_for_challan,name='add_customer_for_challan'),
+    path('entr_custmr_for_challan',views.entr_custmr_for_challan,name='entr_custmr_for_challan'),
+    path('additem_page_challan',views.additem_page_challan,name='additem_page_challan'),
+    path('additem_challan',views.additem_challan,name='additem_challan'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     
