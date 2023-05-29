@@ -111,7 +111,8 @@ urlpatterns = [
     path('add_customer_for_challan',views.add_customer_for_challan,name='add_customer_for_challan'),
     path('entr_custmr_for_challan',views.entr_custmr_for_challan,name='entr_custmr_for_challan'),
     path('additem_page_challan',views.additem_page_challan,name='additem_page_challan'),
-    path('additem_challan',views.additem_challan,name='additem_challan'),
+    path('additem_challan',views.additem_challan,name='additem_challan'), 
+    path('delivery_challan_view/<int:id>',views.delivery_challan_view,name='delivery_challan_view'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

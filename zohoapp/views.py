@@ -2129,7 +2129,7 @@ def create_delivery_chellan(request):
 
 def delivery_chellan_home(request):
     company = company_details.objects.get(user = request.user)
-    viewitem=banking.objects.filter(user=request.user)
+    viewitem=DeliveryChellan.objects.filter(user=request.user)
     return render(request,'delivery_chellan.html',{'view':viewitem,"company":company})  
 
 def create_and_send_estimate(request):
@@ -2187,7 +2187,7 @@ def create_and_send_estimate(request):
             mapped = list(mapped)
             for element in mapped:
                 created = ChallanItems.objects.get_or_create(
-                    challan=challan, item_name=element[0], quantity=element[1], rate=element[2], discount=element[3], tax_percentage=element[4], amount=element[5])
+                    chellan=challan, item_name=element[0], quantity=element[1], rate=element[2], discount=element[3], tax_percentage=element[4], amount=element[5])
 
         cust_email = customer.objects.get(
             user=user, customerName=cust_name).customerEmail
@@ -2350,3 +2350,18 @@ def additem_challan(request):
            
             return redirect("create_delivery_chellan")
     return redirect("additem_challan")
+
+def delivery_challan_view(request, id):
+    user = request.user
+    company = company_details.objects.get(user=user)
+    all_estimates = DeliveryChellan.objects.filter(user=user)
+    estimate = DeliveryChellan.objects.get(id=id)
+    items = ChallanItems.objects.filter(chellan=estimate)
+    print(items)
+    context = {
+        'company': company,
+        'all_estimates':all_estimates,
+        'estimate': estimate,
+        'items': items,
+    }
+    return render(request, 'delivery_challan_view.html', context)

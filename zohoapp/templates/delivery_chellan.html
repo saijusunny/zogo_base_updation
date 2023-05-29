@@ -22,7 +22,7 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <table class="table table-responsive  ">
+      <table class="table table-responsive  " style="text-align: center;">
         <thead>
           <tr>
             <th class="text-light">Date</th>
@@ -39,12 +39,12 @@
  
           <tr>
  
-            <td class="text-light"> <a href="{% url 'view_bank' v.id%}">{{v.bnk_name}}</a></td>
-            <td class="text-light">{{v.acc_type}}</td>
-            <td class="text-light">{{v.opening_bal}} {{v.opening_blnc_type}}</td>
-            <td class="text-light"> {{v.bnk_name}}</td>
-            <td class="text-light">{{v.acc_type}}</td>
-            <td class="text-light">{{v.opening_bal}} {{v.opening_blnc_type}}</td>
+            <td class="text-light"> <a href="{% url 'delivery_challan_view' v.id%}">{{v.chellan_date}}</a></td>
+            <td class="text-light">{{v.chellan_no}}</td>
+            <td class="text-light">{{v.reference}}</td>
+            <td class="text-light"> {{v.customer_name}}</td>
+            <td class="text-light">{{v.customer_mailid}}</td>
+            <td class="text-light">{{v.total}}</td>
 
            
           </tr>
