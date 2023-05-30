@@ -92,7 +92,7 @@
         <div class="pt-3" style="height: 600px; ">
             <table class="text-white" style="width: 100%;">
                 {% for estimate in all_estimates %}
-                <tr class="clickable-row" data-href="{% url 'estimateslip' estimate.id %}">
+                <tr class="clickable-row" data-href="{% url 'delivery_challan_view' estimate.id %}">
                     <td>
                         <div class="row">
                             <div class="col-md-6">
@@ -102,14 +102,14 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="clickable-row" data-href="{% url 'estimateslip' estimate.id %}">
+                <tr class="clickable-row" data-href="{% url 'delivery_challan_view' estimate.id %}">
                     <td>
                         <div class="row">
                             <div class="col-md-3">
                                 <p>DC-{{estimate.chellan_no}}</p>
                             </div>
                             <div class="col-md-3 text-left">
-                                <p>{{estimate.estimate_date}}</p>
+                                <p>{{estimate.chellan_date}}</p>
                             </div>
                             <div class="col-md-6 text-right">
                                 <p>{{estimate.status}}</p>
@@ -132,28 +132,23 @@
                 DC-{{estimate.chellan_no }}</div>
             <div class="col-md-7 text-white text-right my-auto">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="{% url 'editestimate' estimate.id %}" class="btn btn-sm text-white"
-                        style="background-color:  rgb(86, 86, 85);" data-toggle="tooltip" title="Edit">
-                        <i class="fa fa-pencil"></i></a>
-                    <a href="" class="btn btn-sm text-white btn_print" style="background-color:  rgb(86, 86, 85);"
+                    <a href="{% url 'delivery_challan_edit' estimate.id %}" class="btn btn-success text-white"
+                         data-toggle="tooltip" title="Edit">
+                        <i class="mdi mdi-pencil"></i></a>
+                    <a href="" class="btn btn-danger text-white btn_print" 
                         data-toggle="tooltip" title="PDF" id="pdf">
-                        <i class="fa fa-file-pdf-o"></i></a>
-                    <a href="" class="btn btn-sm text-white btn_print" style="background-color:  rgb(86, 86, 85);"
+                        <i class="mdi mdi-file-pdf-box"></i></a>
+                    <a href="" class="btn btn-success text-white btn_print" 
                         data-toggle="tooltip" title="Print">
-                        <i class="fa fa-print"></i></a>
-                    <a href="{% url 'emailattachment' %}" class="btn btn-sm text-white"
-                        style="background-color:  rgb(86, 86, 85);" data-toggle="tooltip" title="Email">
-                        <i class="fas fa-envelope"></i></a>
+                        <i class="mdi mdi-printer"></i></a>
+                    <a href="{% url 'emailattachment' %}" class="btn btn-danger text-white"
+                         data-toggle="tooltip" title="Email">
+                        <i class="mdi mdi-email"></i></a>
                     
                 </div>
-                <!-- <a href="{% url 'converttoinvoice' estimate.id %}" class="btn btn-sm text-white "
-                    style="background-color: rgb(210, 132, 30);" onclick="return confirm('Do you want to convert this estimate to an invoice?');">
-                    Convert to Invoice</a> -->
-                    <a href="" class="btn btn-sm text-white "
-                    style="background-color: rgb(210, 132, 30);" onclick="return confirm('Do you want to convert this estimate to an invoice?');">
-                    Convert to Invoice</a>
+        
                 <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-sm text-white" style="background-color:  rgb(86, 86, 85);" 
-                onclick="return confirm('Do you want to Delete this Estimate?');"><i class="fas fa-trash-alt"></i></a>
+                onclick="return confirm('Do you want to Delete this Estimate?');"><i class="mdi mdi-delete"></i></a>
             </div>
         </div>
 

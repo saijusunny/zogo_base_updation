@@ -2365,3 +2365,22 @@ def delivery_challan_view(request, id):
         'items': items,
     }
     return render(request, 'delivery_challan_view.html', context)
+
+
+# delivery_challan_edit.html
+
+def delivery_challan_edit(request,id):
+    user = request.user
+    company = company_details.objects.get(user=user)
+    customers = customer.objects.filter(user_id=user.id)
+    items = AddItem.objects.filter(user_id=user.id)
+    estimate = DeliveryChellan.objects.get(id=id)
+    est_items = ChallanItems.objects.filter(chellan=estimate)
+    context = {
+        'company': company,
+        'estimate': estimate,
+        'customers': customers,
+        'items': items,
+        'est_items': est_items,
+    }
+    return render(request, 'delivery_challan_edit.html', context)

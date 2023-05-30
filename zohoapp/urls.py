@@ -113,6 +113,7 @@ urlpatterns = [
     path('additem_page_challan',views.additem_page_challan,name='additem_page_challan'),
     path('additem_challan',views.additem_challan,name='additem_challan'), 
     path('delivery_challan_view/<int:id>',views.delivery_challan_view,name='delivery_challan_view'),
+    path('delivery_challan_edit/<int:id>',views.delivery_challan_edit,name='delivery_challan_edit'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     
