@@ -114,6 +114,25 @@ urlpatterns = [
     path('additem_challan',views.additem_challan,name='additem_challan'), 
     path('delivery_challan_view/<int:id>',views.delivery_challan_view,name='delivery_challan_view'),
     path('delivery_challan_edit/<int:id>',views.delivery_challan_edit,name='delivery_challan_edit'),
+    path('update_challan/<int:id>',views.update_challan,name='update_challan'),
+    path('create_and_send_challan',views.create_and_send_challan,name='create_and_send_challan'),
+    path('create_challan_draft',views.create_challan_draft,name='create_challan_draft'),
+    path('get_cust_mail',views.get_cust_mail,name='get_cust_mail'),
+    path('additem_edit_challan',views.additem_edit_challan,name='additem_edit_challan'),
+    path('additem_challan_edit',views.additem_challan_edit,name='additem_challan_edit'),
+    path('add_customer_edit_challan',views.add_customer_edit_challan,name='add_customer_edit_challan'),
+    path('sv_cust_edit_challan',views.sv_cust_edit_challan,name='sv_cust_edit_challan'),
+    path('add_account_challan_edit',views.add_account_challan_edit,name='add_account_challan_edit'),
+    path('add_unit_edit_challan',views.add_unit_edit_challan,name='add_unit_edit_challan'),
+    path('add_sales_edit_challan',views.add_sales_edit_challan,name='add_sales_edit_challan'),
+
+    path('add_account_challan',views.add_account_challan,name='add_account_challan'),
+    path('add_unit_challan',views.add_unit_challan,name='add_unit_challan'),
+    path('add_sales_challan',views.add_sales_challan,name='add_sales_challan'),
+
+    
+
+    
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

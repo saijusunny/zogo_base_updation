@@ -13,6 +13,7 @@ from django.core.mail import EmailMessage
 from django.views import View
 from .forms import EmailForm
 from django.http import JsonResponse
+from datetime import datetime,date, timedelta
 
 
 def index(request):
@@ -960,6 +961,7 @@ def itemdata_est(request):
     place = company.state
     gst = item.intrastate
     igst = item.interstate
+    
     place_of_supply = customer.objects.get(
         customerName=cust, user=user).placeofsupply
     return JsonResponse({"status": " not", 'place': place, 'rate': rate, 'pos': place_of_supply, 'gst': gst, 'igst': igst})
@@ -2116,12 +2118,14 @@ def create_delivery_chellan(request):
     company = company_details.objects.get(user=user)
     items = AddItem.objects.filter(user_id=user.id)
     customers = customer.objects.filter(user_id=user.id)
-    estimates_count = Estimates.objects.count()
+    dates=date.today()
+    estimates_count = DeliveryChellan.objects.filter(user_id=user.id).count()
     next_count = estimates_count+1
     context = {'company': company,
                'items': items,
                'customers': customers,
                'count': next_count,
+               'date':dates
                }
 
     return render(request, 'create_delivery_chellan.html', context)
@@ -2130,18 +2134,19 @@ def create_delivery_chellan(request):
 def delivery_chellan_home(request):
     company = company_details.objects.get(user = request.user)
     viewitem=DeliveryChellan.objects.filter(user=request.user)
+    
     return render(request,'delivery_chellan.html',{'view':viewitem,"company":company})  
-
-def create_and_send_estimate(request):
+def create_challan_draft(request):
+    
     cur_user = request.user
     user = User.objects.get(id=cur_user.id)
-    print("hello")
+   
     if request.method == 'POST':
         cust_name = request.POST['customer_name']
-        est_number = request.POST['chellan_number']
+        chellan_no = request.POST['chellan_number']
         reference = request.POST['reference']
-        est_date = request.POST['chellan_date']
-        customer_mail = request.POST['customer_mail']
+        chellan_date = request.POST['chellan_date']
+        customer_mailid = request.POST['customer_mail']
         chellan_type = request.POST['chellan_type']
 
         item = request.POST.getlist('item[]')
@@ -2155,12 +2160,70 @@ def create_and_send_estimate(request):
         tax = [float(x) for x in tax1]
         amount1 = request.POST.getlist('amount[]')
         amount = [float(x) for x in amount1]
-        print(item)
-        print(quantity)
-        print(rate)
-        print(discount)
-        print(tax)
-        print(amount)
+       
+
+        cust_note = request.POST['customer_note']
+        sub_total = float(request.POST['subtotal'])
+        igst = float(request.POST['igst'])
+        sgst = float(request.POST['sgst'])
+        cgst = float(request.POST['cgst'])
+        tax_amnt = float(request.POST['total_taxamount'])
+        shipping = float(request.POST['shipping_charge'])
+        adjustment = float(request.POST['adjustment_charge'])
+        total = float(request.POST['total'])
+        tearms_conditions = request.POST['tearms_conditions']
+        attachment = request.FILES.get('file')
+        status = "Draft"
+        tot_in_string = str(total)
+
+        challan = DeliveryChellan(user=user, customer_name=cust_name, chellan_no=chellan_no, reference=reference, chellan_date=chellan_date, customer_mailid=customer_mailid,
+                              sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt,chellan_type=chellan_type, shipping_charge=shipping,
+                             adjustment=adjustment, total=total, status=status, customer_notes=cust_note, terms_conditions=tearms_conditions, 
+                             attachment=attachment)
+        challan.save()
+
+        if len(item) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
+            mapped = zip(item, quantity, rate, discount, tax, amount)
+            mapped = list(mapped)
+            for element in mapped:
+                created = ChallanItems.objects.create(
+                    chellan=challan, item_name=element[0], quantity=element[1], rate=element[2], discount=element[3], tax_percentage=element[4], amount=element[5])
+
+        cust_email = customer.objects.get(
+            user=user, customerName=cust_name).customerEmail
+        
+        # subject = 'Estimate'
+        # message = 'Dear Customer,\n Your Estimate has been Saved for a total amount of: ' + tot_in_string
+        # recipient = cust_email
+        # send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
+
+    return redirect('delivery_chellan_home')
+
+def create_and_send_challan(request):
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+    
+   
+    if request.method == 'POST':
+        cust_name = request.POST['customer_name']
+        chellan_no = request.POST['chellan_number']
+        reference = request.POST['reference']
+        chellan_date = request.POST['chellan_date']
+        customer_mailid = request.POST['customer_mail']
+        chellan_type = request.POST['chellan_type']
+
+        item = request.POST.getlist('item[]')
+        quantity1 = request.POST.getlist('quantity[]')
+        quantity = [float(x) for x in quantity1]
+        rate1 = request.POST.getlist('rate[]')
+        rate = [float(x) for x in rate1]
+        discount1 = request.POST.getlist('discount[]')
+        discount = [float(x) for x in discount1]
+        tax1 = request.POST.getlist('tax[]')
+        tax = [float(x) for x in tax1]
+        amount1 = request.POST.getlist('amount[]')
+        amount = [float(x) for x in amount1]
+      
 
         cust_note = request.POST['customer_note']
         sub_total = float(request.POST['subtotal'])
@@ -2176,7 +2239,7 @@ def create_and_send_estimate(request):
         status = 'Sent'
         tot_in_string = str(total)
 
-        challan = DeliveryChellan(user=user, customer_name=cust_name, chellan_no=est_number, reference=reference, chellan_date=est_date, customer_mailid=customer_mail,
+        challan = DeliveryChellan(user=user, customer_name=cust_name, chellan_no=chellan_no, reference=reference, chellan_date=chellan_date, customer_mailid=customer_mailid,
                               sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt,chellan_type=chellan_type, shipping_charge=shipping,
                              adjustment=adjustment, total=total, status=status, customer_notes=cust_note, terms_conditions=tearms_conditions, 
                              attachment=attachment)
@@ -2186,12 +2249,12 @@ def create_and_send_estimate(request):
             mapped = zip(item, quantity, rate, discount, tax, amount)
             mapped = list(mapped)
             for element in mapped:
-                created = ChallanItems.objects.get_or_create(
+                created = ChallanItems.objects.create(
                     chellan=challan, item_name=element[0], quantity=element[1], rate=element[2], discount=element[3], tax_percentage=element[4], amount=element[5])
 
         cust_email = customer.objects.get(
             user=user, customerName=cust_name).customerEmail
-        print(cust_email)
+      
         # subject = 'Estimate'
         # message = 'Dear Customer,\n Your Estimate has been Saved for a total amount of: ' + tot_in_string
         # recipient = cust_email
@@ -2207,54 +2270,54 @@ def add_customer_for_challan(request):
 def entr_custmr_for_challan(request):
     if request.user.is_authenticated:
         if request.method=='POST':
-            type=request.POST.get('type')
-            txtFullName=request.POST['txtFullName']
-            cpname=request.POST['cpname']
+            type=request.POST.get('type', None)
+            txtFullName=request.POST.get('txtFullName', None)
+            cpname=request.POST.get('cpname', None)
            
-            email=request.POST.get('myEmail')
-            wphone=request.POST.get('wphone')
-            mobile=request.POST.get('mobile')
-            skname=request.POST.get('skname')
-            desg=request.POST.get('desg')      
-            dept=request.POST.get('dept')
-            wbsite=request.POST.get('wbsite')
+            email=request.POST.get('myEmail', None)
+            wphone=request.POST.get('wphone', None)
+            mobile=request.POST.get('mobile', None)
+            skname=request.POST.get('skname', None)
+            desg=request.POST.get('desg', None)      
+            dept=request.POST.get('dept', None)
+            wbsite=request.POST.get('wbsite', None)
 
-            gstt=request.POST.get('gstt')
-            posply=request.POST.get('posply')
-            tax1=request.POST.get('tax1')
-            crncy=request.POST.get('crncy')
-            obal=request.POST.get('obal')
+            gstt=request.POST.get('gstt', None)
+            posply=request.POST.get('posply', None)
+            tax1=request.POST.get('tax1', None)
+            crncy=request.POST.get('crncy', None)
+            obal=request.POST.get('obal', None)
 
-            select=request.POST.get('pterms')
+            select=request.POST.get('pterms', None)
             pterms=payment_terms.objects.get(id=select)
-            pterms=request.POST.get('pterms')
+            pterms=request.POST.get('pterms', None)
 
-            plst=request.POST.get('plst')
-            plang=request.POST.get('plang')
-            fbk=request.POST.get('fbk')
-            twtr=request.POST.get('twtr')
+            plst=request.POST.get('plst', None)
+            plang=request.POST.get('plang', None)
+            fbk=request.POST.get('fbk', None)
+            twtr=request.POST.get('twtr', None)
         
-            atn=request.POST.get('atn')
-            ctry=request.POST.get('ctry')
+            atn=request.POST.get('atn', None)
+            ctry=request.POST.get('ctry', None)
             
-            addrs=request.POST.get('addrs')
-            addrs1=request.POST.get('addrs1')
-            bct=request.POST.get('bct')
-            bst=request.POST.get('bst')
-            bzip=request.POST.get('bzip')
-            bpon=request.POST.get('bpon')
-            bfx=request.POST.get('bfx')
+            addrs=request.POST.get('addrs', None)
+            addrs1=request.POST.get('addrs1', None)
+            bct=request.POST.get('bct', None)
+            bst=request.POST.get('bst', None)
+            bzip=request.POST.get('bzip', None)
+            bpon=request.POST.get('bpon', None)
+            bfx=request.POST.get('bfx', None)
 
-            sal=request.POST.get('sal')
-            ftname=request.POST.get('ftname')
-            ltname=request.POST.get('ltname')
-            mail=request.POST.get('mail')
-            bworkpn=request.POST.get('bworkpn')
-            bmobile=request.POST.get('bmobile')
+            sal=request.POST.get('sal', None)
+            ftname=request.POST.get('ftname', None)
+            ltname=request.POST.get('ltname', None)
+            mail=request.POST.get('mail', None)
+            bworkpn=request.POST.get('bworkpn', None)
+            bmobile=request.POST.get('bmobile', None)
 
-            bskype=request.POST.get('bskype')
-            bdesg=request.POST.get('bdesg')
-            bdept=request.POST.get('bdept')
+            bskype=request.POST.get('bskype', None)
+            bdesg=request.POST.get('bdesg', None)
+            bdept=request.POST.get('bdept', None)
             u = User.objects.get(id = request.user.id)
 
           
@@ -2384,3 +2447,303 @@ def delivery_challan_edit(request,id):
         'est_items': est_items,
     }
     return render(request, 'delivery_challan_edit.html', context)
+
+def update_challan(request,id):
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+
+    if request.method == "POST":
+        estimate = DeliveryChellan.objects.get(id=id)
+        
+        estimate.cust_name = request.POST['customer_name']
+        estimate.chellan_no = request.POST['chellan_number']
+        estimate.reference = request.POST['reference']
+        estimate.chellan_date = request.POST['challan_date']
+        estimate.customer_mailid = request.POST['customer_mail']
+        estimate.chellan_type = request.POST['chellan_type']
+    
+
+        estimate.customer_notes = request.POST['customer_note']
+        estimate.sub_total = float(request.POST['subtotal'])
+        estimate.tax_amount = float(request.POST['total_taxamount'])
+        estimate.shipping_charge = float(request.POST['shipping_charge'])
+        estimate.adjustment = float(request.POST['adjustment_charge'])
+        estimate.total = float(request.POST['total'])
+        estimate.terms_conditions = request.POST['tearms_conditions']
+        estimate.status = 'Draft'
+
+        old=estimate.attachment
+        new=request.FILES.get('file')
+        if old != None and new == None:
+            estimate.attachment = old
+        else:
+            estimate.attachment = new
+
+        estimate.save()
+
+        item = request.POST.getlist('item[]')
+        quantity1 = request.POST.getlist('quantity[]')
+        quantity = [float(x) for x in quantity1]
+        rate1 = request.POST.getlist('rate[]')
+        rate = [float(x) for x in rate1]
+        discount1 = request.POST.getlist('discount[]')
+        discount = [float(x) for x in discount1]
+        tax1 = request.POST.getlist('tax[]')
+        tax = [float(x) for x in tax1]
+        amount1 = request.POST.getlist('amount[]')
+        amount = [float(x) for x in amount1]
+        # print(item)
+        # print(quantity)
+        # print(rate)
+        # print(discount)
+        # print(tax)
+        # print(amount)
+
+        objects_to_delete = ChallanItems.objects.filter(chellan=id)
+        objects_to_delete.delete()
+
+        
+        if len(item) == len(quantity) == len(rate) == len(discount) == len(tax) == len(amount):
+            mapped = zip(item, quantity, rate, discount, tax, amount)
+            mapped = list(mapped)
+            for element in mapped:
+                created = ChallanItems.objects.get_or_create(
+                    chellan=estimate, item_name=element[0], quantity=element[1], rate=element[2], discount=element[3], tax_percentage=element[4], amount=element[5])
+        return redirect('delivery_chellan_home')
+    return redirect('delivery_chellan_home')
+
+def get_cust_mail(request):
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+    company = company_details.objects.get(user=user)
+    # print(company.state)
+  
+    cust = request.GET.get('cust')
+
+
+    item = customer.objects.get(customerName=cust, user=user)
+
+    email = item.customerEmail
+    
+    return JsonResponse({"status": " not", 'email': email})
+    return redirect('/')
+
+def add_customer_edit_challan(request):
+   
+    return render(request,'create_cust_challan_edit.html')
+    
+def sv_cust_edit_challan(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            type=request.POST.get('type', None)
+            txtFullName=request.POST.get('txtFullName', None)
+            cpname=request.POST.get('cpname', None)
+           
+            email=request.POST.get('myEmail', None)
+            wphone=request.POST.get('wphone', None)
+            mobile=request.POST.get('mobile', None)
+            skname=request.POST.get('skname', None)
+            desg=request.POST.get('desg', None)      
+            dept=request.POST.get('dept', None)
+            wbsite=request.POST.get('wbsite', None)
+
+            gstt=request.POST.get('gstt', None)
+            posply=request.POST.get('posply', None)
+            tax1=request.POST.get('tax1', None)
+            crncy=request.POST.get('crncy', None)
+            obal=request.POST.get('obal', None)
+
+            select=request.POST.get('pterms', None)
+            pterms=payment_terms.objects.get(id=select)
+            pterms=request.POST.get('pterms', None)
+
+            plst=request.POST.get('plst', None)
+            plang=request.POST.get('plang', None)
+            fbk=request.POST.get('fbk', None)
+            twtr=request.POST.get('twtr', None)
+        
+            atn=request.POST.get('atn', None)
+            ctry=request.POST.get('ctry', None)
+            
+            addrs=request.POST.get('addrs', None)
+            addrs1=request.POST.get('addrs1', None)
+            bct=request.POST.get('bct', None)
+            bst=request.POST.get('bst', None)
+            bzip=request.POST.get('bzip', None)
+            bpon=request.POST.get('bpon', None)
+            bfx=request.POST.get('bfx', None)
+
+            sal=request.POST.get('sal', None)
+            ftname=request.POST.get('ftname', None)
+            ltname=request.POST.get('ltname', None)
+            mail=request.POST.get('mail', None)
+            bworkpn=request.POST.get('bworkpn', None)
+            bmobile=request.POST.get('bmobile', None)
+
+            bskype=request.POST.get('bskype', None)
+            bdesg=request.POST.get('bdesg', None)
+            bdept=request.POST.get('bdept', None)
+            u = User.objects.get(id = request.user.id)
+
+          
+            ctmr=customer(customerName=txtFullName,customerType=type,
+                        companyName=cpname,customerEmail=email,customerWorkPhone=wphone,
+                         customerMobile=mobile,skype=skname,designation=desg,department=dept,
+                           website=wbsite,GSTTreatment=gstt,placeofsupply=posply, Taxpreference=tax1,
+                             currency=crncy,OpeningBalance=obal,PaymentTerms=pterms,
+                                PriceList=plst,PortalLanguage=plang,Facebook=fbk,Twitter=twtr,
+                                 Attention=atn,country=ctry,Address1=addrs,Address2=addrs1,
+                                  city=bct,state=bst,zipcode=bzip,phone1=bpon,
+                                   fax=bfx,CPsalutation=sal,Firstname=ftname,
+                                    Lastname=ltname,CPemail=mail,CPphone=bworkpn,
+                                    CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
+                                     CPdepartment=bdept,user=u )
+            ctmr.save()  
+            
+            return redirect("delivery_chellan_home")
+        return redirect("delivery_chellan_home")
+
+@login_required(login_url='login')
+def additem_edit_challan(request):
+    unit=Unit.objects.all()
+    sale=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    accounts = Purchase.objects.all()
+    account_types = set(Purchase.objects.values_list('Account_type', flat=True))
+
+    
+    account = Sales.objects.all()
+    account_type = set(Sales.objects.values_list('Account_type', flat=True))
+    
+    
+
+    return render(request,'additem_challanedit.html',{'unit':unit,'sale':sale,'purchase':purchase,
+               
+                            "account":account,"account_type":account_type,"accounts":accounts,"account_types":account_types,
+                            
+                            })
+
+def additem_challan_edit(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            radio=request.POST.get('radio')
+            if radio=='tax':
+    
+                
+                inter=request.POST['inter']
+                intra=request.POST['intra']
+                type=request.POST.get('type')
+                name=request.POST['name']
+                unit=request.POST['unit']
+                sel_price=request.POST.get('sel_price')
+                sel_acc=request.POST.get('sel_acc')
+                s_desc=request.POST.get('sel_desc')
+                cost_price=request.POST.get('cost_price')
+                cost_acc=request.POST.get('cost_acc')      
+                p_desc=request.POST.get('cost_desc')
+                u=request.user.id
+                us=request.user
+                history="Created by" + str(us)
+                user=User.objects.get(id=u)
+                unit=Unit.objects.get(id=unit)
+                sel=Sales.objects.get(id=sel_acc)
+                cost=Purchase.objects.get(id=cost_acc)
+                ad_item=AddItem(type=type,Name=name,p_desc=p_desc,s_desc=s_desc,s_price=sel_price,p_price=cost_price,unit=unit,
+                            sales=sel,purchase=cost,user=user,creat=history,interstate=inter,intrastate=intra
+                                )
+                
+            else:
+                                                  
+                type=request.POST.get('type')
+                name=request.POST['name']
+                unit=request.POST['unit']
+                sel_price=request.POST.get('sel_price')
+                sel_acc=request.POST.get('sel_acc')
+                s_desc=request.POST.get('sel_desc')
+                cost_price=request.POST.get('cost_price')
+                cost_acc=request.POST.get('cost_acc')      
+                p_desc=request.POST.get('cost_desc')
+                u=request.user.id
+                us=request.user
+                history="Created by" + str(us)
+                user=User.objects.get(id=u)
+                unit=Unit.objects.get(id=unit)
+                sel=Sales.objects.get(id=sel_acc)
+                cost=Purchase.objects.get(id=cost_acc)
+                ad_item=AddItem(type=type,Name=name,p_desc=p_desc,s_desc=s_desc,s_price=sel_price,p_price=cost_price,unit=unit,
+                            sales=sel,purchase=cost,user=user,creat=history,interstate='none',intrastate='none'
+                                )
+                ad_item.save()
+            ad_item.save()
+           
+            return redirect("delivery_chellan_home")
+    return redirect("additem_edit_challan")
+
+@login_required(login_url='login')
+def add_account_challan_edit(request):
+    print("haii")
+    if request.method=='POST':
+        Account_type  =request.POST['acc_type']
+        Account_name =request.POST['acc_name']
+        Acount_code =request.POST['acc_code']
+        Account_desc =request.POST['acc_desc']
+       
+        acc=Purchase(Account_type=Account_type,Account_name=Account_name,Acount_code=Acount_code,Account_desc=Account_desc)
+        acc.save()                 
+        return redirect("additem_edit_challan")
+        
+    return redirect("additem_edit_challan")
+
+@login_required(login_url='login')
+def add_unit_edit_challan(request):
+    if request.method=='POST':
+        unit_name=request.POST['unit_name']
+        Unit(unit=unit_name).save()
+        return redirect('additem_edit_challan')
+    return redirect("additem_edit_challan")
+
+@login_required(login_url='login')
+def add_sales_edit_challan(request):
+    if request.method=='POST':
+        Account_type  =request.POST['acc_type']
+        Account_name =request.POST['acc_name']
+        Acount_code =request.POST['acc_code']
+        Account_desc =request.POST['acc_desc']        
+        acc=Sales(Account_type=Account_type,Account_name=Account_name,Acount_code=Acount_code,Account_desc=Account_desc)
+        acc.save()
+        return redirect('additem_edit_challan')
+    return redirect("additem_edit_challan")
+
+@login_required(login_url='login')
+def add_account_challan(request):
+    if request.method=='POST':
+        Account_type  =request.POST['acc_type']
+        Account_name =request.POST['acc_name']
+        Acount_code =request.POST['acc_code']
+        Account_desc =request.POST['acc_desc']
+       
+        acc=Purchase(Account_type=Account_type,Account_name=Account_name,Acount_code=Acount_code,Account_desc=Account_desc)
+        acc.save()                 
+        return redirect("additem_page_challan")
+        
+    return redirect("additem_page_challan")
+
+@login_required(login_url='login')
+def add_unit_challan(request):
+    if request.method=='POST':
+        unit_name=request.POST['unit_name']
+        Unit(unit=unit_name).save()
+        return redirect('additem_page_challan')
+    return redirect("additem_page_challan")
+
+@login_required(login_url='login')
+def add_sales_challan(request):
+    if request.method=='POST':
+        Account_type  =request.POST['acc_type']
+        Account_name =request.POST['acc_name']
+        Acount_code =request.POST['acc_code']
+        Account_desc =request.POST['acc_desc']        
+        acc=Sales(Account_type=Account_type,Account_name=Account_name,Acount_code=Acount_code,Account_desc=Account_desc)
+        acc.save()
+        return redirect('additem_page_challan')
+    return redirect("additem_page_challan")

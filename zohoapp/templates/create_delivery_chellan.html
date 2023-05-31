@@ -175,13 +175,13 @@
     function saveAsDraftDialog() {
 
         var frm = document.getElementById("forms");
-        frm.action = ("{% url 'createestimate'%}")
+        frm.action = ("{% url 'create_challan_draft'%}")
     }
 
     function saveAndSendDialog() {
 
         var frm = document.getElementById("forms");
-        frm.action = ("{% url 'create_and_send_estimate'%}")
+        frm.action = ("{% url 'create_and_send_challan'%}")
     }
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -191,6 +191,26 @@
 
 </script>
 
+
+<script>
+    function cust_mail(){
+        var customer= document.getElementById("customer_sel").value
+        $.ajax({
+                type: "GET",
+                url: "{% url 'get_cust_mail' %}",
+                data: {
+                 
+                    cust: customer
+                },
+                success: function (response) {
+                    console.log(response)
+                    data = response.email
+                    document.getElementById("customer_mail").value = data
+                    
+                }
+            });
+    }
+</script>
 
 <div class="row  ml-2">
     <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> New
@@ -213,11 +233,11 @@
     <div class="row mb-4">
         <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
         <div class="col-sm-10">
-            <select class="" id="customer_sel" name="customer_name" style="width: 50%;height: 35px;">
+            <select class="" id="customer_sel" name="customer_name" onchange="cust_mail()" style="width: 50%;height: 35px;">
                 <option>Select Customer</option>
                 {% for cust in customers %}
-                <option value="{{cust.customerName}}" data-pos="{{cust.placeofsupply}}">
-                    {{cust.customerName}}</option>
+                <option value="{{cust.customerName}}"    data-pos="{{cust.placeofsupply}}">
+                    {{cust.customerName}} </option>
                 {% endfor %}
             </select>
             <a href="{% url 'add_customer_for_challan'  %}"><i class="mdi mdi-plus p-2 rounded"
@@ -241,7 +261,7 @@
     <div class="row mb-4 border-bottom pb-5">
         <div class="col-sm-2"><label for="reference">Delivery Challan Date*</label></div>
         <div class="col-sm-4"> <input type="date" id="chellan_date" name="chellan_date" class=""
-                style="width: 100%;height: 35px;">
+                style="width: 100%;height: 35px;" value="{{date|date:'Y-m-d'}}">
         </div>
       
     </div>
@@ -441,14 +461,12 @@
 
 <script>
 
-    // set todays date on estimate date field
-    var today = new Date().toISOString().substr(0, 10);
-    document.getElementById("estimate_date").value = today;
-    document.getElementById("expiry_date").value = today;
 
     // Add new row
     $(document).ready(function () {
+ 
         $('#add-row').click(function () {
+            
             var table = document.getElementById("item_table");
             var RowCount = table.rows.length;
             console.log(RowCount);

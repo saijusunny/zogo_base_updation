@@ -8,7 +8,7 @@
     <div class="col-md-12 " >
         <h3  class="mb-3  text-white  " style="font-size: 2rem;">New item</h3>     
     
-        <form action="{% url 'additem_challan' %}" method="post">
+        <form action="{% url 'additem_challan_edit' %}" method="post">
             {% csrf_token %}
             <fieldset class="form-group">
                 <div class="row">
@@ -47,9 +47,7 @@
                   </select> 
                     
                  </div>
-              
                  <a href="" data-toggle="modal" data-target="#add_unit"><div style="width: 6rem;" type="button" class="btn btn-secondary">Ad Unit</div></a>
-                 
             </div>
    
   <section>
@@ -70,20 +68,22 @@
         
       </div>
     </div>
+    
+
 
   <div class="row mb-3">
-    <div class="col-md-3 ">
+    <div class="col-md-3">
       
-  <div id="select1_div" style="display: none;">
-    <label for="select1">Intra-State TAX</label>
-    <select name="intra" class="form-control bg-light text-dark" id="select1">
-      <option value="GST0[0%]">GST0[0%]</option>
-      <option value="GST5[5%]">GST5[5%]</option>
-      <option value="GST12[12%]">GST12[12%]</option>
-      <option value="GST18[18%]">GST18[18%]</option>
-      <option value="GST28[28%]">GST28[28%]</option>
-    </select>
-  </div>
+      <div id="select1_div" style="display: none;">
+        <label for="select1">Intra-State TAX</label>
+        <select name="intra" class="form-control bg-light text-dark" id="select1">
+          <option value="GST0[0%]">GST0[0%]</option>
+          <option value="GST5[5%]">GST5[5%]</option>
+          <option value="GST12[12%]">GST12[12%]</option>
+          <option value="GST18[18%]">GST18[18%]</option>
+          <option value="GST28[28%]">GST28[28%]</option>
+        </select>
+      </div>
 
   
     </div>
@@ -199,8 +199,7 @@ function hideAllSelect() {
                                    
 
                                      </div>
-                                                   
-                                                   <a href="" data-toggle="modal" data-target="#add_sale"><div style="width: 6rem;" type="button" class="btn btn-secondary">Ad Account</div></a>
+                                     <a href="" data-toggle="modal" data-target="#add_sale"><div style="width: 6rem;" type="button" class="btn btn-secondary">Ad Account</div></a>
                               </div>
                               <div class="form-group row">
                                 <label  class="col-sm-2 col-form-label">Description </label>
@@ -221,116 +220,117 @@ function hideAllSelect() {
 
           
 <!-- ============================ modal for account adding  -->
-
-
 <div class="rowmt-5 modal " id="add_account">
-    <div class="modal-dialog modal-md modal-dialog-centered "  role="document">
-      <div class="modal-content modal-md bg-dark" style="background-color: #191c24;">
-        <div class="card bg-dark">
-          <div class="card-body bg-dark" >
-            
-              <button type="button" class="close text-light bg-dark" data-dismiss="modal" aria-label=""
-                style="background-color: #191c24;border:none; float: right; font-size: 20px;">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="text-info bg-dark" style="font-size: 20px;font-weight: 600;" id="heads2">Add Account</div>
-              <form style="margin-top: 3rem;" action="{% url 'add_account_challan' %}" method="post">
-                {% csrf_token %}
-                <label class="text-light" >Accout type</label> <br>
-                <input required  type="text" class="form-control bg-light text-dark" name="acc_type" id=""> <br>
-                <label  class="text-light" >Accout Name</label> <br>
-                <input required type="text" class="form-control bg-light text-dark" name="acc_name" id=""> <br>
-                <label class="text-light" >Accout Code</label> <br>
-                <input type="text" class="form-control bg-light text-dark" name="acc_code" id=""> <br>
-                <label class="text-light" >Accout Description</label> <br>
-                <input type="text" class="form-control bg-light text-dark" name="acc_desc" id=""> <br> <br>
-                
-                <div class="row">
-                  <div class="col-sm-12" style="text-align: center;">
-                    <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
-                  </div>
-                </div>
+  <div class="modal-dialog modal-md modal-dialog-centered "  role="document">
+    <div class="modal-content modal-md bg-dark" style="background-color: #191c24;">
+      <div class="card bg-dark">
+        <div class="card-body bg-dark" >
           
-              </form>
+            <button type="button" class="close text-light bg-dark" data-dismiss="modal" aria-label=""
+              style="background-color: #191c24;border:none; float: right; font-size: 20px;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-info bg-dark" style="font-size: 20px;font-weight: 600;" id="heads2">Add Account</div>
+            <form style="margin-top: 3rem;" action="{% url 'add_account_challan_edit' %}" method="post">
+              {% csrf_token %}
+              <label class="text-light" >Accout type</label> <br>
+              <input required  type="text" class="form-control bg-light text-dark" name="acc_type" id=""> <br>
+              <label  class="text-light" >Accout Name</label> <br>
+              <input required type="text" class="form-control bg-light text-dark" name="acc_name" id=""> <br>
+              <label class="text-light" >Accout Code</label> <br>
+              <input type="text" class="form-control bg-light text-dark" name="acc_code" id=""> <br>
+              <label class="text-light" >Accout Description</label> <br>
+              <input type="text" class="form-control bg-light text-dark" name="acc_desc" id=""> <br> <br>
               
-          </div>
-        </div>
-    </div>
-  </div>
-  </div>
-
-  <div class="rowmt-5 modal " id="add_unit">
-    <div class="modal-dialog modal-md modal-dialog-centered "  role="document">
-      <div class="modal-content modal-md bg-dark" style="background-color: #191c24;">
-        <div class="card bg-dark">
-          <div class="card-body bg-dark" >
-            
-              <button type="button" class="close text-light bg-dark" data-dismiss="modal" aria-label=""
-                style="background-color: #191c24;border:none; float: right; font-size: 20px;">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="text-info bg-dark" style="font-size: 20px;font-weight: 600;" id="heads2">Add Unit</div>
-              <form style="margin-top: 3rem;" action="{% url 'add_unit_challan' %}" method="post">
-                {% csrf_token %}
-                <label class="text-light" >Unit</label> <br>
-                <input required  type="text" class="form-control bg-light text-dark" name="unit_name" id=""> <br>
-               
-                <br>
-
-                <p class="text-light" disabled>eg:KL,PCS,BOX,LTR</p> <br>
-                <div class="row">
-                  <div class="col-sm-12" style="text-align: center;">
-                    <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
-                  </div>
+              <div class="row">
+                <div class="col-sm-12" style="text-align: center;">
+                  <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
                 </div>
-    
-                
-             </form>
-              
-          </div>
-        </div>
-    </div>
-  </div>
-  </div>
-
-  <div class="rowmt-5 modal " id="add_sale">
-    <div class="modal-dialog modal-md modal-dialog-centered "  role="document">
-      <div class="modal-content modal-md bg-dark" style="background-color: #191c24;">
-        <div class="card bg-dark">
-          <div class="card-body bg-dark" >
+              </div>
+        
+            </form>
             
-              <button type="button" class="close text-light bg-dark" data-dismiss="modal" aria-label=""
-                style="background-color: #191c24;border:none; float: right; font-size: 20px;">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="text-info bg-dark" style="font-size: 20px;font-weight: 600;" id="heads2">Add Sale</div>
-              <form style="margin-top: 3rem;" action="{% url 'add_sales_challan' %}" method="post">
-                {% csrf_token %}
-                <label class="text-light" >Accout type</label> <br>
-                <input  required type="text" class="form-control bg-light text-dark" name="acc_type" id=""> <br>
-                <label class="text-light" >Accout Name</label> <br>
-                <input required type="text" class="form-control bg-light text-dark" name="acc_name" id=""> <br>
-                <label class="text-light" >Accout Code</label> <br>
-                <input type="text" class="form-control bg-light text-dark" name="acc_code" id=""> <br>
-                <label class="text-light" >Accout Description</label> <br>
-                <input type="text" class="form-control bg-light text-dark" name="acc_desc" id=""> <br> <br>
-                <div class="row">
-                  <div class="col-sm-12" style="text-align: center;">
-                    <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
-                  </div>
-                </div>
-                
-              
-              </form>
-              
-          </div>
         </div>
-    </div>
+      </div>
   </div>
+</div>
+</div>
 
+<div class="rowmt-5 modal " id="add_unit">
+  <div class="modal-dialog modal-md modal-dialog-centered "  role="document">
+    <div class="modal-content modal-md bg-dark" style="background-color: #191c24;">
+      <div class="card bg-dark">
+        <div class="card-body bg-dark" >
+          
+            <button type="button" class="close text-light bg-dark" data-dismiss="modal" aria-label=""
+              style="background-color: #191c24;border:none; float: right; font-size: 20px;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-info bg-dark" style="font-size: 20px;font-weight: 600;" id="heads2">Add Unit</div>
+            <form style="margin-top: 3rem;" action="{% url 'add_unit_edit_challan' %}" method="post">
+              {% csrf_token %}
+              <label class="text-light" >Unit</label> <br>
+              <input required  type="text" class="form-control bg-light text-dark" name="unit_name" id=""> <br>
+             
+              <br>
+
+              <p class="text-light" disabled>eg:KL,PCS,BOX,LTR</p> <br>
+              <div class="row">
+                <div class="col-sm-12" style="text-align: center;">
+                  <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
+                </div>
+              </div>
+  
+              
+           </form>
+            
+        </div>
+      </div>
   </div>
+</div>
+</div>
+
+<div class="rowmt-5 modal " id="add_sale">
+  <div class="modal-dialog modal-md modal-dialog-centered "  role="document">
+    <div class="modal-content modal-md bg-dark" style="background-color: #191c24;">
+      <div class="card bg-dark">
+        <div class="card-body bg-dark" >
+          
+            <button type="button" class="close text-light bg-dark" data-dismiss="modal" aria-label=""
+              style="background-color: #191c24;border:none; float: right; font-size: 20px;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-info bg-dark" style="font-size: 20px;font-weight: 600;" id="heads2">Add Sale</div>
+            <form style="margin-top: 3rem;" action="{% url 'add_sales_edit_challan' %}" method="post">
+              {% csrf_token %}
+              <label class="text-light" >Accout type</label> <br>
+              <input  required type="text" class="form-control bg-light text-dark" name="acc_type" id=""> <br>
+              <label class="text-light" >Accout Name</label> <br>
+              <input required type="text" class="form-control bg-light text-dark" name="acc_name" id=""> <br>
+              <label class="text-light" >Accout Code</label> <br>
+              <input type="text" class="form-control bg-light text-dark" name="acc_code" id=""> <br>
+              <label class="text-light" >Accout Description</label> <br>
+              <input type="text" class="form-control bg-light text-dark" name="acc_desc" id=""> <br> <br>
+              <div class="row">
+                <div class="col-sm-12" style="text-align: center;">
+                  <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
+                </div>
+              </div>
+              
+            
+            </form>
+            
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+          
+  </div>
+  
  
-
-
 
 {% endblock %}
