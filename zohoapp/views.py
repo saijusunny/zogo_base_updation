@@ -2267,57 +2267,65 @@ def add_customer_for_challan(request):
    
     return render(request,'create_cust_challan.html')
     
+def payment_term_challan(request):
+    if request.method=='POST':
+        term=request.POST.get('term')
+        day=request.POST.get('day')
+        ptr=payment_terms(Terms=term,Days=day)
+        ptr.save()
+        return redirect("add_customer_for_challan")
+
 def entr_custmr_for_challan(request):
     if request.user.is_authenticated:
         if request.method=='POST':
-            type=request.POST.get('type', None)
-            txtFullName=request.POST.get('txtFullName', None)
-            cpname=request.POST.get('cpname', None)
+            type=request.POST.get('type')
+            txtFullName=request.POST['txtFullName']
+            cpname=request.POST['cpname']
            
-            email=request.POST.get('myEmail', None)
-            wphone=request.POST.get('wphone', None)
-            mobile=request.POST.get('mobile', None)
-            skname=request.POST.get('skname', None)
-            desg=request.POST.get('desg', None)      
-            dept=request.POST.get('dept', None)
-            wbsite=request.POST.get('wbsite', None)
+            email=request.POST.get('myEmail')
+            wphone=request.POST.get('wphone')
+            mobile=request.POST.get('mobile')
+            skname=request.POST.get('skname')
+            desg=request.POST.get('desg')      
+            dept=request.POST.get('dept')
+            wbsite=request.POST.get('wbsite')
 
-            gstt=request.POST.get('gstt', None)
-            posply=request.POST.get('posply', None)
-            tax1=request.POST.get('tax1', None)
-            crncy=request.POST.get('crncy', None)
-            obal=request.POST.get('obal', None)
+            gstt=request.POST.get('gstt')
+            posply=request.POST.get('posply')
+            tax1=request.POST.get('tax1')
+            crncy=request.POST.get('crncy')
+            obal=request.POST.get('obal')
 
-            select=request.POST.get('pterms', None)
+            select=request.POST.get('pterms')
             pterms=payment_terms.objects.get(id=select)
-            pterms=request.POST.get('pterms', None)
+            pterms=request.POST.get('pterms')
 
-            plst=request.POST.get('plst', None)
-            plang=request.POST.get('plang', None)
-            fbk=request.POST.get('fbk', None)
-            twtr=request.POST.get('twtr', None)
+            plst=request.POST.get('plst')
+            plang=request.POST.get('plang')
+            fbk=request.POST.get('fbk')
+            twtr=request.POST.get('twtr')
         
-            atn=request.POST.get('atn', None)
-            ctry=request.POST.get('ctry', None)
+            atn=request.POST.get('atn')
+            ctry=request.POST.get('ctry')
             
-            addrs=request.POST.get('addrs', None)
-            addrs1=request.POST.get('addrs1', None)
-            bct=request.POST.get('bct', None)
-            bst=request.POST.get('bst', None)
-            bzip=request.POST.get('bzip', None)
-            bpon=request.POST.get('bpon', None)
-            bfx=request.POST.get('bfx', None)
+            addrs=request.POST.get('addrs')
+            addrs1=request.POST.get('addrs1')
+            bct=request.POST.get('bct')
+            bst=request.POST.get('bst')
+            bzip=request.POST.get('bzip')
+            bpon=request.POST.get('bpon')
+            bfx=request.POST.get('bfx')
 
-            sal=request.POST.get('sal', None)
-            ftname=request.POST.get('ftname', None)
-            ltname=request.POST.get('ltname', None)
-            mail=request.POST.get('mail', None)
-            bworkpn=request.POST.get('bworkpn', None)
-            bmobile=request.POST.get('bmobile', None)
+            sal=request.POST.get('sal')
+            ftname=request.POST.get('ftname')
+            ltname=request.POST.get('ltname')
+            mail=request.POST.get('mail')
+            bworkpn=request.POST.get('bworkpn')
+            bmobile=request.POST.get('bmobile')
 
-            bskype=request.POST.get('bskype', None)
-            bdesg=request.POST.get('bdesg', None)
-            bdept=request.POST.get('bdept', None)
+            bskype=request.POST.get('bskype')
+            bdesg=request.POST.get('bdesg')
+            bdept=request.POST.get('bdept')
             u = User.objects.get(id = request.user.id)
 
           
@@ -2333,7 +2341,7 @@ def entr_custmr_for_challan(request):
                                     Lastname=ltname,CPemail=mail,CPphone=bworkpn,
                                     CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
                                      CPdepartment=bdept,user=u )
-            ctmr.save()  
+            ctmr.save() 
             
             return redirect("create_delivery_chellan")
         return redirect("create_delivery_chellan")
@@ -2531,58 +2539,68 @@ def get_cust_mail(request):
 def add_customer_edit_challan(request):
    
     return render(request,'create_cust_challan_edit.html')
-    
+
+
+
+def payment_term_challan_edit(request):
+    if request.method=='POST':
+        term=request.POST.get('term')
+        day=request.POST.get('day')
+        ptr=payment_terms(Terms=term,Days=day)
+        ptr.save()
+        return redirect("add_customer_edit_challan")
+
 def sv_cust_edit_challan(request):
     if request.user.is_authenticated:
         if request.method=='POST':
-            type=request.POST.get('type', None)
-            txtFullName=request.POST.get('txtFullName', None)
-            cpname=request.POST.get('cpname', None)
+            type=request.POST.get('type')
+            txtFullName=request.POST['txtFullName']
+            cpname=request.POST['cpname']
            
-            email=request.POST.get('myEmail', None)
-            wphone=request.POST.get('wphone', None)
-            mobile=request.POST.get('mobile', None)
-            skname=request.POST.get('skname', None)
-            desg=request.POST.get('desg', None)      
-            dept=request.POST.get('dept', None)
-            wbsite=request.POST.get('wbsite', None)
+            email=request.POST.get('myEmail')
+            wphone=request.POST.get('wphone')
+            mobile=request.POST.get('mobile')
+            skname=request.POST.get('skname')
+            desg=request.POST.get('desg')      
+            dept=request.POST.get('dept')
+            wbsite=request.POST.get('wbsite')
 
-            gstt=request.POST.get('gstt', None)
-            posply=request.POST.get('posply', None)
-            tax1=request.POST.get('tax1', None)
-            crncy=request.POST.get('crncy', None)
-            obal=request.POST.get('obal', None)
+            gstt=request.POST.get('gstt')
+            posply=request.POST.get('posply')
+            tax1=request.POST.get('tax1')
+            crncy=request.POST.get('crncy')
+            obal=request.POST.get('obal')
 
-            select=request.POST.get('pterms', None)
+            select=request.POST.get('pterms')
             pterms=payment_terms.objects.get(id=select)
-            pterms=request.POST.get('pterms', None)
+            pterms=request.POST.get('pterms')
 
-            plst=request.POST.get('plst', None)
-            plang=request.POST.get('plang', None)
-            fbk=request.POST.get('fbk', None)
-            twtr=request.POST.get('twtr', None)
+            plst=request.POST.get('plst')
+            plang=request.POST.get('plang')
+            fbk=request.POST.get('fbk')
+            twtr=request.POST.get('twtr')
         
-            atn=request.POST.get('atn', None)
-            ctry=request.POST.get('ctry', None)
+            atn=request.POST.get('atn')
+            ctry=request.POST.get('ctry')
             
-            addrs=request.POST.get('addrs', None)
-            addrs1=request.POST.get('addrs1', None)
-            bct=request.POST.get('bct', None)
-            bst=request.POST.get('bst', None)
-            bzip=request.POST.get('bzip', None)
-            bpon=request.POST.get('bpon', None)
-            bfx=request.POST.get('bfx', None)
+            addrs=request.POST.get('addrs')
+            addrs1=request.POST.get('addrs1')
+            bct=request.POST.get('bct')
+            bst=request.POST.get('bst')
+            bzip=request.POST.get('bzip')
+            bpon=request.POST.get('bpon')
+            bfx=request.POST.get('bfx')
 
-            sal=request.POST.get('sal', None)
-            ftname=request.POST.get('ftname', None)
-            ltname=request.POST.get('ltname', None)
-            mail=request.POST.get('mail', None)
-            bworkpn=request.POST.get('bworkpn', None)
-            bmobile=request.POST.get('bmobile', None)
+            sal=request.POST.get('sal')
+            ftname=request.POST.get('ftname')
+            ltname=request.POST.get('ltname')
+            mail=request.POST.get('mail')
+            bworkpn=request.POST.get('bworkpn')
+            bmobile=request.POST.get('bmobile')
 
-            bskype=request.POST.get('bskype', None)
-            bdesg=request.POST.get('bdesg', None)
-            bdept=request.POST.get('bdept', None)
+            bskype=request.POST.get('bskype')
+            bdesg=request.POST.get('bdesg')
+            bdept=request.POST.get('bdept')
             u = User.objects.get(id = request.user.id)
 
           

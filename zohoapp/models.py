@@ -132,8 +132,7 @@ class doc_upload_table(models.Model):
     document=models.FileField(upload_to='doc/')
     
     
-    
- 
+
 
 class customer(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default='')

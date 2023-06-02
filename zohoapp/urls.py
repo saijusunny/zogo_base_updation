@@ -125,6 +125,8 @@ urlpatterns = [
     path('add_account_challan_edit',views.add_account_challan_edit,name='add_account_challan_edit'),
     path('add_unit_edit_challan',views.add_unit_edit_challan,name='add_unit_edit_challan'),
     path('add_sales_edit_challan',views.add_sales_edit_challan,name='add_sales_edit_challan'),
+    path('payment_term_challan_edit',views.payment_term_challan_edit,name='payment_term_challan_edit'),
+    path('payment_term_challan',views.payment_term_challan,name='payment_term_challan'),
 
     path('add_account_challan',views.add_account_challan,name='add_account_challan'),
     path('add_unit_challan',views.add_unit_challan,name='add_unit_challan'),
