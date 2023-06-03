@@ -2572,7 +2572,7 @@ def sv_cust_edit_challan(request):
             obal=request.POST.get('obal')
 
             select=request.POST.get('pterms')
-            pterms=payment_terms.objects.get(id=select)
+           
             pterms=request.POST.get('pterms')
 
             plst=request.POST.get('plst')
