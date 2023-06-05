@@ -30,6 +30,9 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
+    td{
+    
+    }
 </style>
 
 
@@ -128,14 +131,14 @@
     </div>
     <div class="col-sm-8">
         <div class="row  mx-2 py-3" style="background-color: rgba(252, 236, 217, 0.8)">
-            <div class="col-md-5 text-dark" style="font-size: 2.5rem;">
+            <div class="col-sm-5 text-dark" style="font-size: 2.5rem;">
                 DC-{{estimate.chellan_no }}</div>
-            <div class="col-md-7 text-white text-right my-auto">
+            <div class="col-sm-7 text-white text-right my-auto">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="{% url 'delivery_challan_edit' estimate.id %}" class="btn btn-success text-white"
+                    <a href="{% url 'delivery_challan_edit' estimate.id %}"  class="btn btn-success text-white"
                          data-toggle="tooltip" title="Edit">
                         <i class="mdi mdi-pencil"></i></a>
-                    <a href="" class="btn btn-danger text-white btn_print" 
+                    <a href="{% url 'render_challan_pdf' estimate.id %}" class="btn btn-danger text-white " 
                         data-toggle="tooltip" title="PDF" id="pdf">
                         <i class="mdi mdi-file-pdf-box"></i></a>
                     <a href="" class="btn btn-success text-white btn_print" 
@@ -145,9 +148,15 @@
                          data-toggle="tooltip" title="Email">
                         <i class="mdi mdi-email"></i></a>
                     
+                    {% if estimate.attachment != ""%}
+                    <a href="{{estimate.attachment.url}}" class="btn btn-success text-white"
+                        data-toggle="tooltip" title="Download Attached File">
+                        <span class="mdi mdi-download"></span></a>
+                    {%endif%}
+                    
                 </div>
         
-                <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-sm text-white" style="background-color:  rgb(86, 86, 85);" 
+                <a href="{% url 'deletechallan' estimate.id %}" class="btn btn-sm text-white" style="background-color:  rgb(86, 86, 85);" 
                 onclick="return confirm('Do you want to Delete this Estimate?');"><i class="mdi mdi-delete"></i></a>
             </div>
         </div>
@@ -156,15 +165,18 @@
             style="background-color: rgba(252, 236, 217, 0.8); height: 600px; overflow-y: scroll;">
             <div class="slip p-5 convert_to_pdf bg-light" id="whatToPrint"
                 style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
+               
+                
+
                 <div class="row ">
                     <div class="col-sm-6 ">
                         <h4 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h4>
                         <h6 class="text-dark">{{ company.address }}</h6>
                         <h6 class="text-dark">{{ company.city }},{{ company.state }}</h6>
                     </div>
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-6" style="text-align: right;">
                         <h1 class="text-dark" style="font-size: 1.2rem; ">Delivery Challan</h1>
-                        <h6 class="text-dark">Delivery Challan Number : DC-{{estimate.chellan_no }}</h6>
+                        <h6 class="text-dark">DC-{{estimate.chellan_no }}</h6>
                     </div>
                 </div>
                 <hr>
@@ -173,13 +185,13 @@
                         <h6 class="text-dark">Bill To</h6>
                         <h6 class="text-dark">{{ estimate.customer_name }}</h6>
                     </div>
-                    <div class="col-sm-6 text-right mt-auto">
+                    <div class="col-sm-6  mt-auto" style="text-align: right;">
                         <h6 class="text-dark ">Date : {{ estimate.chellan_date }}</h6>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table mt-2" style="border-color: black;">
+                        <table class="table mt-2" style="border-color: black; color: black;">
                             <thead class="bg-secondary text-white">
                                 <tr>
                                     <th class="text-center text-dark">#</th>
@@ -206,8 +218,8 @@
                 </div>
                 
                 <div class="row" >
-                    <div class="col-sm-6" style="padding-left: 45%;">
-                        <table class="table">
+                    <div class="col-sm-6" style="padding-left: 55%; ">
+                        <table class="table" style="color: black">
                             <tr>
         
                                 <td class="text-right">Sub-Total:</td>
@@ -256,13 +268,22 @@
                     </div>
                 </div>
                 
+                <div class="row mt-3">
+                    <div class="col-sm-6" style="text-align: justify;">
+                        <p class="m-0 font-weight-bold" style="color:black">Customer Note : </p>
+                        <p style="color:black">{{estimate.customer_notes}}</p>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-6" style="text-align: justify;">
+                        <p class="m-0 font-weight-bold" style="color:black">Customer Note : </p>
+                        <p style="color:black">{{estimate.customer_notes}}</p>
+                    </div>
+                </div>
 
 
             </div>
-            <!-- <button id="generate-pdf">Generate PDF</button> -->
-
-            <h4 class="text-dark pt-5">More Information</h4>
-            <h6 class="text-dark">Sales Person: Xyz</h6>
+         
         </div>
     </div>
 </div>

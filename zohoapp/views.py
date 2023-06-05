@@ -14,6 +14,8 @@ from django.views import View
 from .forms import EmailForm
 from django.http import JsonResponse
 from datetime import datetime,date, timedelta
+from xhtml2pdf import pisa
+from django.template.loader import get_template
 
 
 def index(request):
@@ -2255,10 +2257,10 @@ def create_and_send_challan(request):
         cust_email = customer.objects.get(
             user=user, customerName=cust_name).customerEmail
       
-        # subject = 'Estimate'
-        # message = 'Dear Customer,\n Your Estimate has been Saved for a total amount of: ' + tot_in_string
-        # recipient = cust_email
-        # send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
+        subject = 'Delivery Challan'
+        message = 'Dear Customer,\n Your Delivery Challan has been Saved for a total amount of: ' + tot_in_string
+        recipient = cust_email
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient])
 
     return redirect('delivery_chellan_home')
 
@@ -2297,7 +2299,7 @@ def entr_custmr_for_challan(request):
             obal=request.POST.get('obal')
 
             select=request.POST.get('pterms')
-            pterms=payment_terms.objects.get(id=select)
+            
             pterms=request.POST.get('pterms')
 
             plst=request.POST.get('plst')
@@ -2463,7 +2465,7 @@ def update_challan(request,id):
     if request.method == "POST":
         estimate = DeliveryChellan.objects.get(id=id)
         
-        estimate.cust_name = request.POST['customer_name']
+        estimate.customer_name = request.POST['customer_name']
         estimate.chellan_no = request.POST['chellan_number']
         estimate.reference = request.POST['reference']
         estimate.chellan_date = request.POST['challan_date']
@@ -2765,3 +2767,62 @@ def add_sales_challan(request):
         acc.save()
         return redirect('additem_page_challan')
     return redirect("additem_page_challan")
+
+
+
+def render_challan_pdf(request,id):
+
+    user = request.user
+    company = company_details.objects.get(user=user)
+    challn_on = DeliveryChellan.objects.filter(user=user)
+    challan = DeliveryChellan.objects.get(id=id)
+    items = ChallanItems.objects.filter(chellan=challan)
+    print(challan.customer_name) 
+    print(challan.customer_mailid)
+    customers = customer.objects.get(user=user,customerName=challan.customer_name,customerEmail=challan.customer_mailid)
+
+
+
+    print(items)
+    
+
+    total = challan.total
+
+    template_path = 'delivery_challan_pdf.html'
+    context = {
+        'company': company,
+        'challn_on':challn_on,
+        'challan': challan,
+        'items': items,
+        'customers':customers
+    }
+    fname=challan.chellan_no
+   
+    # Create a Django response object, and specify content_type as pdftemp_creditnote
+    response = HttpResponse(content_type='application/pdf')
+    #response['Content-Disposition'] = 'attachment; filename="certificate.pdf"'
+    response['Content-Disposition'] =f'attachment; filename= {fname}.pdf'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    
+
+
+    # if error then show some funy view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
+def deletechallan(request,id):
+    user = request.user
+    company = company_details.objects.get(user=user)
+    estimate = DeliveryChellan.objects.get(id=id,user=user)
+    items = ChallanItems.objects.filter(chellan=id)
+    items.delete()
+    estimate.delete()
+    return redirect('delivery_chellan_home')

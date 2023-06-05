@@ -131,8 +131,8 @@ urlpatterns = [
     path('add_account_challan',views.add_account_challan,name='add_account_challan'),
     path('add_unit_challan',views.add_unit_challan,name='add_unit_challan'),
     path('add_sales_challan',views.add_sales_challan,name='add_sales_challan'),
-
-    
+    path('render_challan_pdf/<int:id>',views.render_challan_pdf,name='render_challan_pdf'),
+    path('deletechallan/<int:id>',views.deletechallan,name='deletechallan'),
 
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
