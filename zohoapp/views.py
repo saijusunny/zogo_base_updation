@@ -2122,6 +2122,7 @@ def create_delivery_chellan(request):
     customers = customer.objects.filter(user_id=user.id)
     dates=date.today()
     estimates_count = DeliveryChellan.objects.filter(user_id=user.id).count()
+    print(estimates_count)
     next_count = estimates_count+1
     context = {'company': company,
                'items': items,
@@ -2281,10 +2282,11 @@ def entr_custmr_for_challan(request):
     if request.user.is_authenticated:
         if request.method=='POST':
             type=request.POST.get('type')
-            txtFullName=request.POST['txtFullName']
-            cpname=request.POST['cpname']
+            txtFullName=request.POST.get('txtFullName')
+            cpname=request.POST.get('cpname')
            
-            email=request.POST.get('myEmail')
+            email=request.POST.get('email_id')
+            print(email)
             wphone=request.POST.get('wphone')
             mobile=request.POST.get('mobile')
             skname=request.POST.get('skname')
@@ -2459,6 +2461,7 @@ def delivery_challan_edit(request,id):
     return render(request, 'delivery_challan_edit.html', context)
 
 def update_challan(request,id):
+   
     cur_user = request.user
     user = User.objects.get(id=cur_user.id)
 
@@ -2539,7 +2542,7 @@ def get_cust_mail(request):
     return redirect('/')
 
 def add_customer_edit_challan(request):
-   
+    
     return render(request,'create_cust_challan_edit.html')
 
 
@@ -2559,7 +2562,7 @@ def sv_cust_edit_challan(request):
             txtFullName=request.POST['txtFullName']
             cpname=request.POST['cpname']
            
-            email=request.POST.get('myEmail')
+            email=request.POST.get('email_id')
             wphone=request.POST.get('wphone')
             mobile=request.POST.get('mobile')
             skname=request.POST.get('skname')

@@ -78,7 +78,7 @@
                 console.log(rate);
                 console.log(discount);
                 console.log(tax);
-                $(this).find('.taxamount').val((qty * rate) * (tax / 100));
+                $(this).find('.taxamount').val(((qty * rate) - discount) * (tax / 100));
                 var taxamount = parseFloat($(this).find('.taxamount').val());
                 $(this).find('.amount').val(qty * rate - discount);
 
@@ -115,11 +115,8 @@
         d = 0;
         var pos = $("#customer_sel option:selected").data("pos");
         var state = document.getElementById("state").value;
-
         if (pos == state) {
-            console.log(pos);
-            console.log(state);
-            console.log(taxamount);
+           
             gst = taxamount / 2;
             // gst = Math.round (gst);
             console.log(gst);
@@ -139,6 +136,7 @@
             $('#cgst').val(d.toFixed(2));
             $('#sgst').val(d.toFixed(2));
             document.getElementById('tr_igst').style.display = "table-row";
+    
         }
     }
     // Calculate total
@@ -168,7 +166,7 @@
         let customMsg = "Do you want to cancel?";
 
         if (confirm(customMsg)) {
-            alert("Estimate cancelled!")
+            alert("Delivery Challan cancelled!")
         }
     }
 
@@ -419,11 +417,8 @@
         <div class="col-md-4 py-5 text-center rounded" style="background-color: rgba(250, 227, 198, 0.8);">
             <label class="text-dark" for="">Attach File(s) to Estimate</label><br>
 
-            <label for="file-upload" class="btn text-white border-0"
-                style="background-color: rgb(210, 132, 30);">
-                <i class="fas fa-upload text-white"></i> Upload File
-            </label>
-            <input id="file-upload" type="file" name="file" style="display:none;">
+            
+            <input id="file-upload" class="form-control bg-light text-dark" type="file" name="file">
 
 
 

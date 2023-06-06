@@ -2,7 +2,11 @@
 {% load static %}
 {% block content %}
 
-
+<style>
+  a{
+    color: rgb(210, 132, 30);
+  }
+</style>
 
   <div class="row">
     <div class="col-sm-12 " >
@@ -12,24 +16,32 @@
 
     </div>
   </div>
-
+  
   <div class="row">
     <div class="col-sm-12" style="text-align: right;">
-      <a class="btn btn-success mr-2" style="width: 100px;" href="{% url 'create_delivery_chellan' %}" >New</a>
+      <a class="btn btn-dark mr-2" style="width: 100px;background-color: rgb(210, 132, 30);" href="{% url 'create_delivery_chellan' %}" >New</a>
     </div>
 
   </div>
-
-  <div class="row">
+  <div class="row mt-4">
     <div class="col-sm-12">
-      <table class="table table-responsive  " style="text-align: center;">
+      <input type="text" class="form-control text-dark bg-light" id="search" placeholder="search...">
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-sm-12">
+      <table class="table table-responsive " id="myTable" style="text-align: center;">
         <thead>
           <tr>
-            <th class="text-light">Date</th>
-            <th class="text-light">Delivery Challan#</th>
-            <th class="text-light">Refferernce#</th>
             <th class="text-light">Customer Name</th>
             <th class="text-light">Customer Mail id</th>
+            <th class="text-light">Delivery Challan#</th>
+            <th class="text-light">Date</th>
+            
+            <th class="text-light">Refferernce#</th>
+            
+            
             <th class="text-light">Amount</th>
           
           </tr>
@@ -38,12 +50,14 @@
           {% for v in view %}
  
           <tr>
- 
-            <td class="text-light"> <a href="{% url 'delivery_challan_view' v.id%}">{{v.chellan_date}}</a></td>
-            <td class="text-light">{{v.chellan_no}}</td>
-            <td class="text-light">{{v.reference}}</td>
-            <td class="text-light"> {{v.customer_name}}</td>
+            <td class="text-light"><a href="{% url 'delivery_challan_view' v.id%}">{{v.customer_name}}</a> </td>
             <td class="text-light">{{v.customer_mailid}}</td>
+            <td class="text-light">DC-{{v.chellan_no}}</td>
+            <td class="text-light"> {{v.chellan_date}}</td>
+            
+            <td class="text-light">{{v.reference}}</td>
+      
+            
             <td class="text-light">{{v.total}}</td>
 
            
@@ -55,6 +69,15 @@
     </div>
   </div>
 
-  
+  <script>
+    $(document).ready(function () {
+      $("#search").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>
  
 {% endblock %}
