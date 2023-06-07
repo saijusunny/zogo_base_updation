@@ -2279,76 +2279,62 @@ def payment_term_challan(request):
         return redirect("add_customer_for_challan")
 
 def entr_custmr_for_challan(request):
-    if request.user.is_authenticated:
-        if request.method=='POST':
-            type=request.POST.get('type')
-            txtFullName=request.POST.get('txtFullName')
-            cpname=request.POST.get('cpname')
-           
-            email=request.POST.get('email_id')
-            print(email)
-            wphone=request.POST.get('wphone')
-            mobile=request.POST.get('mobile')
-            skname=request.POST.get('skname')
-            desg=request.POST.get('desg')      
-            dept=request.POST.get('dept')
-            wbsite=request.POST.get('wbsite')
 
-            gstt=request.POST.get('gstt')
-            posply=request.POST.get('posply')
-            tax1=request.POST.get('tax1')
-            crncy=request.POST.get('crncy')
-            obal=request.POST.get('obal')
+    type=request.GET.get('types')
+    txtFullName=request.GET.get('txtFullNames')
+    cpname=request.GET.get('cpnames')
+    email=request.GET.get('email_ids')
+    mobile=request.GET.get('mobiles')
+    wbsite=request.GET.get('wbsites')
+    gstt=request.GET.get('gstts')
+    posply=request.GET.get('posplys')
+    tax1=request.GET.get('tax1s')
+    crncy=request.GET.get('crncys')
+    obal=request.GET.get('obals')
+    select=request.GET.get('ptermss')
+    pterms=request.GET.get('ptermss')
+    plst=request.GET.get('plsts')
+    plang=request.GET.get('plangs')
+    fbk=request.GET.get('fbks')
+    twtr=request.GET.get('twtrs')
+    atn=request.GET.get('atns')
+    ctry=request.GET.get('ctrys')
+    addrs=request.GET.get('addrss')
+    addrs1=request.GET.get('addrs1s')
+    bct=request.GET.get('bcts')
+    bst=request.GET.get('bsts')
+    bzip=request.GET.get('bzips')
+    bpon=request.GET.get('bpons')
+    bfx=request.GET.get('bfxs')
+    sal=request.GET.get('sals')
+    ftname=request.GET.get('ftnames')
+    ltname=request.GET.get('ltnames')
+    mail=request.GET.get('mails')
+    bworkpn=request.GET.get('bworkpns')
+    bmobile=request.GET.get('bmobiles')
 
-            select=request.POST.get('pterms')
-            
-            pterms=request.POST.get('pterms')
+    bskype=request.GET.get('bskypes')
+    bdesg=request.GET.get('bdesgs')
+    bdept=request.GET.get('bdepts')
+    u = User.objects.get(id = request.user.id)
 
-            plst=request.POST.get('plst')
-            plang=request.POST.get('plang')
-            fbk=request.POST.get('fbk')
-            twtr=request.POST.get('twtr')
-        
-            atn=request.POST.get('atn')
-            ctry=request.POST.get('ctry')
-            
-            addrs=request.POST.get('addrs')
-            addrs1=request.POST.get('addrs1')
-            bct=request.POST.get('bct')
-            bst=request.POST.get('bst')
-            bzip=request.POST.get('bzip')
-            bpon=request.POST.get('bpon')
-            bfx=request.POST.get('bfx')
 
-            sal=request.POST.get('sal')
-            ftname=request.POST.get('ftname')
-            ltname=request.POST.get('ltname')
-            mail=request.POST.get('mail')
-            bworkpn=request.POST.get('bworkpn')
-            bmobile=request.POST.get('bmobile')
-
-            bskype=request.POST.get('bskype')
-            bdesg=request.POST.get('bdesg')
-            bdept=request.POST.get('bdept')
-            u = User.objects.get(id = request.user.id)
-
-          
-            ctmr=customer(customerName=txtFullName,customerType=type,
-                        companyName=cpname,customerEmail=email,customerWorkPhone=wphone,
-                         customerMobile=mobile,skype=skname,designation=desg,department=dept,
-                           website=wbsite,GSTTreatment=gstt,placeofsupply=posply, Taxpreference=tax1,
-                             currency=crncy,OpeningBalance=obal,PaymentTerms=pterms,
-                                PriceList=plst,PortalLanguage=plang,Facebook=fbk,Twitter=twtr,
-                                 Attention=atn,country=ctry,Address1=addrs,Address2=addrs1,
-                                  city=bct,state=bst,zipcode=bzip,phone1=bpon,
-                                   fax=bfx,CPsalutation=sal,Firstname=ftname,
-                                    Lastname=ltname,CPemail=mail,CPphone=bworkpn,
-                                    CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
-                                     CPdepartment=bdept,user=u )
-            ctmr.save() 
-            
-            return redirect("create_delivery_chellan")
-        return redirect("create_delivery_chellan")
+    ctmr=customer(customerName=txtFullName,customerType=type,
+                companyName=cpname,customerEmail=email,
+                    customerMobile=mobile,
+                    website=wbsite,GSTTreatment=gstt,placeofsupply=posply, Taxpreference=tax1,
+                        currency=crncy,OpeningBalance=obal,PaymentTerms=pterms,
+                        PriceList=plst,PortalLanguage=plang,Facebook=fbk,Twitter=twtr,
+                            Attention=atn,country=ctry,Address1=addrs,Address2=addrs1,
+                            city=bct,state=bst,zipcode=bzip,phone1=bpon,
+                            fax=bfx,CPsalutation=sal,Firstname=ftname,
+                            Lastname=ltname,CPemail=mail,CPphone=bworkpn,
+                            CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
+                                CPdepartment=bdept,user=u )
+    ctmr.save() 
+    print(txtFullName)
+    return JsonResponse({"status": " not", 'customer': txtFullName})
+     
 
 @login_required(login_url='login')
 def additem_page_challan(request):
