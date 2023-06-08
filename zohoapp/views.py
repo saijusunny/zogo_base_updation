@@ -2124,11 +2124,30 @@ def create_delivery_chellan(request):
     estimates_count = DeliveryChellan.objects.filter(user_id=user.id).count()
     print(estimates_count)
     next_count = estimates_count+1
+
+    unit=Unit.objects.all()
+    sale=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    accounts = Purchase.objects.all()
+    account_types = set(Purchase.objects.values_list('Account_type', flat=True))
+
+    
+    account = Sales.objects.all()
+    account_type = set(Sales.objects.values_list('Account_type', flat=True))
+
     context = {'company': company,
                'items': items,
                'customers': customers,
                'count': next_count,
-               'date':dates
+               'date':dates,
+               'unit':unit,
+               'sale':sale,
+               'purchase':purchase,
+                "account":account,
+                "account_type":account_type,
+                "accounts":accounts,
+                "account_types":account_types,
+
                }
 
     return render(request, 'create_delivery_chellan.html', context)
@@ -2279,7 +2298,7 @@ def payment_term_challan(request):
         return redirect("add_customer_for_challan")
 
 def entr_custmr_for_challan(request):
-
+    print("sdfdsfsds")
     type=request.GET.get('types')
     txtFullName=request.GET.get('txtFullNames')
     cpname=request.GET.get('cpnames')
@@ -2333,7 +2352,7 @@ def entr_custmr_for_challan(request):
                                 CPdepartment=bdept,user=u )
     ctmr.save() 
     print(txtFullName)
-    return JsonResponse({"status": " not", 'customer': txtFullName})
+    return JsonResponse({"status": " not", 'customer': txtFullName, "plos":posply})
      
 
 @login_required(login_url='login')
@@ -2357,60 +2376,33 @@ def additem_page_challan(request):
                             })
 
 def additem_challan(request):
-    if request.user.is_authenticated:
-        if request.method=='POST':
-            radio=request.POST.get('radio')
-            if radio=='tax':
     
-                
-                inter=request.POST['inter']
-                intra=request.POST['intra']
-                type=request.POST.get('type')
-                name=request.POST['name']
-                unit=request.POST['unit']
-                sel_price=request.POST.get('sel_price')
-                sel_acc=request.POST.get('sel_acc')
-                s_desc=request.POST.get('sel_desc')
-                cost_price=request.POST.get('cost_price')
-                cost_acc=request.POST.get('cost_acc')      
-                p_desc=request.POST.get('cost_desc')
-                u=request.user.id
-                us=request.user
-                history="Created by" + str(us)
-                user=User.objects.get(id=u)
-                unit=Unit.objects.get(id=unit)
-                sel=Sales.objects.get(id=sel_acc)
-                cost=Purchase.objects.get(id=cost_acc)
-                ad_item=AddItem(type=type,Name=name,p_desc=p_desc,s_desc=s_desc,s_price=sel_price,p_price=cost_price,unit=unit,
-                            sales=sel,purchase=cost,user=user,creat=history,interstate=inter,intrastate=intra
-                                )
-                
-            else:
-                                                  
-                type=request.POST.get('type')
-                name=request.POST['name']
-                unit=request.POST['unit']
-                sel_price=request.POST.get('sel_price')
-                sel_acc=request.POST.get('sel_acc')
-                s_desc=request.POST.get('sel_desc')
-                cost_price=request.POST.get('cost_price')
-                cost_acc=request.POST.get('cost_acc')      
-                p_desc=request.POST.get('cost_desc')
-                u=request.user.id
-                us=request.user
-                history="Created by" + str(us)
-                user=User.objects.get(id=u)
-                unit=Unit.objects.get(id=unit)
-                sel=Sales.objects.get(id=sel_acc)
-                cost=Purchase.objects.get(id=cost_acc)
-                ad_item=AddItem(type=type,Name=name,p_desc=p_desc,s_desc=s_desc,s_price=sel_price,p_price=cost_price,unit=unit,
-                            sales=sel,purchase=cost,user=user,creat=history,interstate='none',intrastate='none'
-                                )
-                ad_item.save()
-            ad_item.save()
-           
-            return redirect("create_delivery_chellan")
-    return redirect("additem_challan")
+    radio=request.GET.get('radios')
+    inter=request.GET.get('inters')
+    intra=request.GET.get('intras')
+    type=request.GET.get('types')
+    name=request.GET.get('names')
+    unit=request.GET.get('units')
+    sel_price=request.GET.get('sel_prices')
+    sel_acc=request.GET.get('sel_accs')
+    s_desc=request.GET.get('s_descs')
+    cost_price=request.GET.get('cost_prices')
+    cost_acc=request.GET.get('cost_accs')      
+    p_desc=request.GET.get('p_descs')
+    u=request.user.id
+    us=request.user
+    history="Created by" + str(us)
+    user=User.objects.get(id=u)
+    unit=Unit.objects.get(id=unit)
+    sel=Sales.objects.get(id=sel_acc)
+    cost=Purchase.objects.get(id=cost_acc)
+    ad_item=AddItem(type=type,Name=name,p_desc=p_desc,s_desc=s_desc,s_price=sel_price,p_price=cost_price,unit=unit,
+                sales=sel,purchase=cost,user=user,creat=history,interstate=inter,intrastate=intra
+                    )
+    ad_item.save()
+
+    return JsonResponse({"status": " not", 'name': name})
+
 
 def delivery_challan_view(request, id):
     user = request.user
@@ -2437,12 +2429,32 @@ def delivery_challan_edit(request,id):
     items = AddItem.objects.filter(user_id=user.id)
     estimate = DeliveryChellan.objects.get(id=id)
     est_items = ChallanItems.objects.filter(chellan=estimate)
+
+    unit=Unit.objects.all()
+    sale=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    accounts = Purchase.objects.all()
+    account_types = set(Purchase.objects.values_list('Account_type', flat=True))
+
+    
+    account = Sales.objects.all()
+    account_type = set(Sales.objects.values_list('Account_type', flat=True))
+
+    
+
     context = {
         'company': company,
         'estimate': estimate,
         'customers': customers,
         'items': items,
         'est_items': est_items,
+        'unit':unit,
+        'sale':sale,
+        'purchase':purchase,
+        "account":account,
+        "account_type":account_type,
+        "accounts":accounts,
+        "account_types":account_types,
     }
     return render(request, 'delivery_challan_edit.html', context)
 

@@ -272,110 +272,63 @@ transition: transform 0.4s ,top 0.4s;
 
 <script>
   function create_item(){
-      console.log("welcome")
-      if(document.getElementsByName('type').checked){
-        var type=document.getElementsByName('type')[0].value 
-      }else{
-        var type=document.getElementsByName('types')[0].value
-      }
-      var txtFullName=document.getElementsByName('txtFullName')[0].value
-      var cpname=document.getElementsByName('cpname')[0].value
-      var email_id=document.getElementsByName('email_id')[0].value
-      var mobile=document.getElementsByName('mobile')[0].value
-      var wbsite=document.getElementsByName('wbsite')[0].value
-      var gstt=document.getElementsByName('gstt')[0].value
-      var posply=document.getElementsByName('posply')[0].value
-      var tax1=document.getElementsByName('tax1')[0].value
-      var crncy=document.getElementsByName('crncy')[0].value
-      var obal=document.getElementsByName('obal')[0].value
-      var pterms=document.getElementsByName('pterms')[0].value
-      var plst=document.getElementsByName('plst')[0].value
-      var plang=document.getElementsByName('plang')[0].value
-      var fbk=document.getElementsByName('fbk')[0].value
-      var twtr=document.getElementsByName('twtr')[0].value
-      var atn=document.getElementsByName('atn')[0].value
-      var ctry=document.getElementsByName('ctry')[0].value
-      var addrs=document.getElementsByName('addrs')[0].value
-      var addrs1=document.getElementsByName('addrs1')[0].value
-      var bct=document.getElementsByName('bct')[0].value
-      var bst=document.getElementsByName('bst')[0].value
-      var bzip=document.getElementsByName('bzip')[0].value
-      var bpon=document.getElementsByName('bpon')[0].value
-      var bfx=document.getElementsByName('bfx')[0].value
-      var sal=document.getElementsByName('sal')[0].value
-      var ftname=document.getElementsByName('ftname')[0].value
-      var ltname=document.getElementsByName('ltname')[0].value
-      var mail=document.getElementsByName('mail')[0].value
-      var bworkpn=document.getElementsByName('bworkpn')[0].value
-      var bmobile=document.getElementsByName('bmobile')[0].value
-      var bskype=document.getElementsByName('bskype')[0].value
-      var bdesg=document.getElementsByName('bdesg')[0].value
-      var bdept=document.getElementsByName('bdept')[0].value
       
+      if(document.getElementsByName('radio1')[0].checked){
+        var radio=document.getElementsByName('radio1')[0].value
+      }else{
+        var radio=document.getElementsByName('radio2')[0].value
+      }
 
+      if(document.getElementsByName('type')[0].checked){
+        var type=document.getElementsByName('type')[0].value
+      }else{
+        var type=document.getElementsByName('type2')[0].value
+      }
+      
+      var inter=document.getElementsByName('inter')[0].value
+      var intra=document.getElementsByName('intra')[0].value
+      
+      var name=document.getElementsByName('name')[0].value
+      var unit=document.getElementsByName('unit')[0].value
+      var sel_price=document.getElementsByName('sel_price')[0].value
+      var sel_acc=document.getElementsByName('sel_acc')[0].value
+      var sel_desc=document.getElementsByName('sel_desc')[0].value
+      var cost_price=document.getElementsByName('cost_price')[0].value
+      var cost_acc=document.getElementsByName('cost_acc')[0].value      
+      var cost_desc=document.getElementsByName('cost_desc')[0].value
+      
       $.ajax({
         
               type: "GET",
-              url: "{% url 'entr_custmr_for_challan' %}",
+              url: "{% url 'additem_challan' %}",
               
               data: {
-                
-                
+                radios:radio,
+                inters:inter,
+                intras:intra,
                 types:type,
-                txtFullNames:txtFullName,
-                cpnames:cpname,
-                email_ids:email_id,
-                
-                mobiles:mobile,
-                wbsites:wbsite,
-
-                gstts:gstt,
-                posplys:posply,
-                tax1s:tax1,
-                crncys:crncy,
-                obals:obal,
-                
-                ptermss:pterms,
-
-                plsts:plst,
-                plangs:plang,
-                fbks:fbk,
-                twtrs:twtr,
-            
-                atns:atn,
-                ctrys:ctry,
-                
-                addrss:addrs,
-                addrs1s:addrs1,
-                bcts:bct,
-                bsts:bst,
-                bzips:bzip,
-                bpons:bpon,
-                bfxs:bfx,
-
-                sals:sal,
-                ftnames:ftname,
-                ltnames:ltname,
-                mails:mail,
-                bworkpns:bworkpn,
-                bmobiles:bmobile,
-
-                bskypes:bskype,
-                bdesgs:bdesg,
-                bdepts:bdept,
+                names:name,
+                units:unit,
+                sel_prices:sel_price,
+                sel_accs:sel_acc,
+                s_descs:sel_desc,
+                cost_prices:cost_price,
+                cost_accs:cost_acc,      
+                p_descs:cost_desc,
               },
               
               success: function (response) {
                   console.log(response)
-                  data = response.customer
               
-                  document.getElementById("crt_cust").innerHTML = data
+                  window.datast = response.name
+              
+                  document.getElementById("items_nms").innerHTML = window.datast
+                  const id_country_option = document.getElementById("item2");
                   
+
               }
               
           });
-
-          
           
           
   }
@@ -480,8 +433,9 @@ transition: transform 0.4s ,top 0.4s;
                 success: function (response) {
                     console.log(response)
                     data = response.customer
-                
+                    ploss = response.plos
                     document.getElementById("crt_cust").innerHTML = data
+                    document.getElementById("crt_cust").dataset.pos = ploss
                     
                 }
                 
@@ -606,6 +560,7 @@ transition: transform 0.4s ,top 0.4s;
                             {% for i in items %}
                             <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
                             {% endfor %}
+                            <option class='text-dark' id="items_nms"></option>
                         </select></div>
                 </td>
                 <td class='text-right'><input type='number' id='qty1'
@@ -740,11 +695,11 @@ transition: transform 0.4s ,top 0.4s;
 <!-- Create Item  -->
 <div class="modal fade" id="create_item">
   <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-    <div class="modal-content modal-xl" style="background-color: #191c24;">
+    <div class="modal-content modal-xl  p-5" style="background-color: #000000;">
       <div class="modal-header">
-        <h5 class="modal-title text-info">Edit Client Details</h5>
+        <h5 class="modal-title text-info">Create Item</h5>
         <button type="button" class="close text-light" data-dismiss="modal" aria-label=""
-          style="font-size: 20px;;background-color: #191c24;border:none;">
+          style="font-size: 20px;;background-color: #000000;border:none;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -753,8 +708,7 @@ transition: transform 0.4s ,top 0.4s;
         <div class="col-md-12 " >
             <h3  class="mb-3  text-white  " style="font-size: 2rem;">New item</h3>     
         
-            <form action="{% url 'additem_challan' %}" method="post">
-                {% csrf_token %}
+            
                 <fieldset class="form-group">
                     <div class="row">
                       <label class="col-form-label col-sm-2 pt-0">Type <i class="fa fa-question-circle"></i></label>
@@ -766,7 +720,7 @@ transition: transform 0.4s ,top 0.4s;
                           </label>
                         </div>
                         <div class="form-check ml-5">
-                          <input required class="form-check-input" type="radio" name="type" id="gridRadios2" value="Services">
+                          <input required class="form-check-input" type="radio" name="type2" id="gridRadios2" value="Services">
                           <label class="form-check-label" for="gridRadios2">
                            Services
                           </label>
@@ -807,9 +761,9 @@ transition: transform 0.4s ,top 0.4s;
         <div class="row mb-3 mr-3">
           <div class="col-sm-12">
             
-            <input type="radio"  name="radio" value="tax" onclick="showAllSelect()">
+            <input type="radio"  name="radio1" value="tax" onclick="showAllSelect()">
             <label for="">Taxable</label> &nbsp;&nbsp;&nbsp;
-            <input type="radio" name="radio" value="none" onclick="hideAllSelect()">
+            <input type="radio" name="radio2" value="none" onclick="hideAllSelect()">
             <label for="">None-Taxable</label>
      
             
@@ -1753,6 +1707,7 @@ let popu=document.getElementById("popup-1");
             
             var table = document.getElementById("item_table");
             var RowCount = table.rows.length;
+            
             console.log(RowCount);
             var newRow = $(`
             <tr id='row${RowCount}' >
@@ -1762,9 +1717,12 @@ let popu=document.getElementById("popup-1");
                             class='form-control bg-transparent text-black border-0 item_select' name='item[]'
                             id='item${RowCount}'>
                             <option class='text-dark'>Select Items</option>
+                            
                             {% for i in items %}
                             <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+
                             {% endfor %}
+                            <option class='text-dark' value="${window.datast}">${window.datast}</option>
                         </select></div>
                 </td>
                 <td class='text-right'><input type='number' id='qty${RowCount}'

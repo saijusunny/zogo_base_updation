@@ -92,7 +92,7 @@
                 
             </div>
         </div>
-        <div class="pt-3" style="height: 600px; ">
+        <div class="pt-3" >
             <table class="text-white" style="width: 100%;">
                 {% for estimate in all_estimates %}
                 <tr class="clickable-row" data-href="{% url 'delivery_challan_view' estimate.id %}">
@@ -130,39 +130,39 @@
         </div>
     </div>
     <div class="col-sm-8">
-        <div class="row  mx-2 py-3" style="background-color: rgba(252, 236, 217, 0.8)">
+        <div class="row  mx-1 py-3" style="background-color: rgba(252, 236, 217, 0.8)">
             <div class="col-sm-5 text-dark" style="font-size: 2.5rem;">
                 DC-{{estimate.chellan_no }}</div>
             <div class="col-sm-7 text-white text-right my-auto">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="{% url 'delivery_challan_edit' estimate.id %}"  class="btn btn-success text-white"
+                    <a href="{% url 'delivery_challan_edit' estimate.id %}"  class="btn btn-dark m-1 text-white"
                          data-toggle="tooltip" title="Edit">
                         <i class="mdi mdi-pencil"></i></a>
-                    <a href="{% url 'render_challan_pdf' estimate.id %}" class="btn btn-danger text-white " 
+                    <a href="{% url 'render_challan_pdf' estimate.id %}" class="btn btn-dark m-1 text-white " 
                         data-toggle="tooltip" title="PDF" id="pdf">
                         <i class="mdi mdi-file-pdf-box"></i></a>
-                    <a href="" class="btn btn-success text-white btn_print" 
+                    <a href="" class="btn btn-dark m-1 text-white btn_print" 
                         data-toggle="tooltip" title="Print">
                         <i class="mdi mdi-printer"></i></a>
-                    <a href="{% url 'emailattachment' %}" class="btn btn-danger text-white"
+                    <a href="{% url 'emailattachment' %}" class="btn btn-dark m-1 text-white"
                          data-toggle="tooltip" title="Email">
                         <i class="mdi mdi-email"></i></a>
                     
                     {% if estimate.attachment != ""%}
-                    <a href="{{estimate.attachment.url}}" class="btn btn-success text-white"
+                    <a href="{{estimate.attachment.url}}" class="btn btn-dark m-1 text-white"
                         data-toggle="tooltip" title="Download Attached File">
                         <span class="mdi mdi-download"></span></a>
                     {%endif%}
                     
                 </div>
         
-                <a href="{% url 'deletechallan' estimate.id %}" class="btn btn-sm text-white" style="background-color:  rgb(86, 86, 85);" 
+                <a href="{% url 'deletechallan' estimate.id %}" class="btn btn-dark text-white"  
                 onclick="return confirm('Do you want to Delete this Estimate?');"><i class="mdi mdi-delete"></i></a>
             </div>
         </div>
 
         
-            <div class="slip p-5 convert_to_pdf bg-light" id="whatToPrint"
+            <div class="slip p-5 mx-1 convert_to_pdf bg-light" id="whatToPrint"
                 style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
                
                 
