@@ -2428,6 +2428,11 @@ def delivery_challan_edit(request,id):
     customers = customer.objects.filter(user_id=user.id)
     items = AddItem.objects.filter(user_id=user.id)
     estimate = DeliveryChellan.objects.get(id=id)
+    print(estimate.customer_name)
+    print(estimate.customer_mailid)
+    
+    pls= customer.objects.get(customerName=estimate.customer_name)
+    
     est_items = ChallanItems.objects.filter(chellan=estimate)
 
     unit=Unit.objects.all()
@@ -2455,6 +2460,7 @@ def delivery_challan_edit(request,id):
         "account_type":account_type,
         "accounts":accounts,
         "account_types":account_types,
+        "pls":pls,
     }
     return render(request, 'delivery_challan_edit.html', context)
 

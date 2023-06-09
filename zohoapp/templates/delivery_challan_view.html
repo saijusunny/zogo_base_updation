@@ -40,7 +40,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
 
-<script type="text/javascript">
+<script> 
+      function printDiv() { 
+          var divContents = document.getElementById("whatToPrint").innerHTML; 
+          var a = window.open('', '', 'height=500, width=400'); 
+          a.document.write('<html>'); 
+          a.document.write('<body > <h1> <br>'); 
+          a.document.write(divContents); 
+          a.document.write('</body></html>'); 
+          a.document.close(); 
+          a.print(); 
+      } 
+</script>
+
+
+<!-- <script type="text/javascript">
     $(document).ready(function ($) {
         console.log('print');
 
@@ -51,7 +65,7 @@
             //credit : https://ekoopmans.github.io/html2pdf.js
 
             var element = document.getElementById('whatToPrint');
-
+            print('#whatToPrint')
             //easy
             //html2pdf().from(element).save();
 
@@ -78,7 +92,7 @@
 
 
     });
-</script>
+</script> -->
 
 
 
@@ -141,7 +155,7 @@
                     <a href="{% url 'render_challan_pdf' estimate.id %}" class="btn btn-dark m-1 text-white " 
                         data-toggle="tooltip" title="PDF" id="pdf">
                         <i class="mdi mdi-file-pdf-box"></i></a>
-                    <a href="" class="btn btn-dark m-1 text-white btn_print" 
+                    <a href="" onclick="printDiv()" class="btn btn-dark m-1 text-white btn_print" 
                         data-toggle="tooltip" title="Print">
                         <i class="mdi mdi-printer"></i></a>
                     <a href="{% url 'emailattachment' %}" class="btn btn-dark m-1 text-white"
