@@ -959,7 +959,7 @@ def itemdata_est(request):
 
     item = AddItem.objects.get(Name=id, user=user)
 
-    rate = item.p_price
+    rate = item.s_price
     place = company.state
     gst = item.intrastate
     igst = item.interstate
@@ -2258,7 +2258,7 @@ def create_and_send_challan(request):
         total = float(request.POST['total'])
         tearms_conditions = request.POST['tearms_conditions']
         attachment = request.FILES.get('file')
-        status = 'Sent'
+        status = 'Send'
         tot_in_string = str(total)
 
         challan = DeliveryChellan(user=user, customer_name=cust_name, chellan_no=chellan_no, reference=reference, chellan_date=chellan_date, customer_mailid=customer_mailid,
@@ -2404,18 +2404,31 @@ def additem_challan(request):
     return JsonResponse({"status": " not", 'name': name})
 
 
+
+
 def delivery_challan_view(request, id):
     user = request.user
     company = company_details.objects.get(user=user)
     all_estimates = DeliveryChellan.objects.filter(user=user)
     estimate = DeliveryChellan.objects.get(id=id)
     items = ChallanItems.objects.filter(chellan=estimate)
+
+
+    challn_on = DeliveryChellan.objects.filter(user=user)
+    challan = DeliveryChellan.objects.get(id=id)
+    customers = customer.objects.get(user=user,customerName=challan.customer_name,customerEmail=challan.customer_mailid)
+
+
     print(items)
     context = {
         'company': company,
         'all_estimates':all_estimates,
         'estimate': estimate,
         'items': items,
+        'challn_on':challn_on,
+        'challan': challan,
+        
+        'customers':customers
     }
     return render(request, 'delivery_challan_view.html', context)
 
@@ -2428,8 +2441,7 @@ def delivery_challan_edit(request,id):
     customers = customer.objects.filter(user_id=user.id)
     items = AddItem.objects.filter(user_id=user.id)
     estimate = DeliveryChellan.objects.get(id=id)
-    print(estimate.customer_name)
-    print(estimate.customer_mailid)
+   
     
     pls= customer.objects.get(customerName=estimate.customer_name)
     
@@ -2833,3 +2845,61 @@ def deletechallan(request,id):
     items.delete()
     estimate.delete()
     return redirect('delivery_chellan_home')
+
+
+# latest 
+
+def filter_chellan(request):
+    if request.method=='POST':
+        flter_drop  =request.POST['flter_drop']
+        company = company_details.objects.get(user = request.user)
+        if flter_drop == "Draft":
+            viewitem=DeliveryChellan.objects.filter(user=request.user, status="Draft") 
+        elif flter_drop == "Send":
+            viewitem=DeliveryChellan.objects.filter(user=request.user, status="Send")
+        else:
+            viewitem=DeliveryChellan.objects.filter(user=request.user)
+        return render(request,'delivery_chellan.html',{'view':viewitem,"company":company})  
+    return redirect("delivery_chellan_home") 
+
+def filter_chellan_type(request):
+    if request.method=='POST':
+        flter_drop  =request.POST['flter_tp']
+        usr_in  =request.POST['usr_in']
+        company = company_details.objects.get(user = request.user)
+        if flter_drop == "Customer":
+            viewitem=DeliveryChellan.objects.filter(user=request.user, customer_name=usr_in) 
+        elif flter_drop == "Date":
+            fromdate=datetime.strptime(usr_in, "%d-%m-%Y").date()
+            print(fromdate)
+
+            viewitem=DeliveryChellan.objects.filter(user=request.user, chellan_date=fromdate)
+        elif flter_drop == "Amount":
+            viewitem=DeliveryChellan.objects.filter(user=request.user, total=usr_in)
+        else:
+            viewitem=DeliveryChellan.objects.filter(user=request.user)
+        return render(request,'delivery_chellan.html',{'view':viewitem,"company":company})  
+    return redirect("delivery_chellan_home") 
+
+
+def itemdata_challan(request):
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+    company = company_details.objects.get(user=user)
+    # print(company.state)
+    id = request.GET.get('id')
+    cust = request.GET.get('cust')
+    print(id)
+    print(cust)
+
+    item = AddItem.objects.get(Name=id, user=user)
+
+    rate = item.s_price
+    place = company.state
+    gst = item.intrastate
+    igst = item.interstate
+    
+    place_of_supply = customer.objects.get(
+        customerName=cust, user=user).placeofsupply
+    return JsonResponse({"status": " not", 'place': place, 'rate': rate, 'pos': place_of_supply, 'gst': gst, 'igst': igst})
+    return redirect('/')

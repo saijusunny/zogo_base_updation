@@ -2,13 +2,6 @@
 {% load static %}
 {% block content %}
 
-<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
-    crossorigin="anonymous"></script>
-<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/JavaScript-autoComplete/1.0.4/auto-complete.min.js"
-    integrity="sha512-LwZthDLbb+dritfG9jbFyY1ClYqlkF4I9foqo+783wcl6EPR+kE3uqb0OPsieHt4pFH4HVduwX6rTTDmCaC20g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <style>
     /* width */
     ::-webkit-scrollbar {
@@ -30,70 +23,35 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
-    td{
-    
+    #selected-area{
+        font-size: 20px;
     }
+  
+    
 </style>
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+function printForm() {
+ 
+    var selectedArea = document.getElementById("selected-area");
+    
+
+    var printWindow = window.open('', 'PrintWindow', 'height=800,width=800');
+    
+
+    printWindow.document.write('<html><head><title>Print Selected Area</title></head><body>' + selectedArea.innerHTML + '</body></html>');
+    
+
+    printWindow.print();
+    
+    
+    printWindow.close();
+    }
 
 
-<script> 
-      function printDiv() { 
-          var divContents = document.getElementById("whatToPrint").innerHTML; 
-          var a = window.open('', '', 'height=500, width=400'); 
-          a.document.write('<html>'); 
-          a.document.write('<body > <h1> <br>'); 
-          a.document.write(divContents); 
-          a.document.write('</body></html>'); 
-          a.document.close(); 
-          a.print(); 
-      } 
 </script>
-
-
-<!-- <script type="text/javascript">
-    $(document).ready(function ($) {
-        console.log('print');
-
-        $(document).on('click', '.btn_print', function (event) {
-            console.log('print1');
-            event.preventDefault();
-
-            //credit : https://ekoopmans.github.io/html2pdf.js
-
-            var element = document.getElementById('whatToPrint');
-            print('#whatToPrint')
-            //easy
-            //html2pdf().from(element).save();
-
-            //custom file name
-            //html2pdf().set({filename: 'code_with_mark_'+js.AutoCode()+'.pdf'}).from(element).save();
-
-
-            //more custom settings
-            var opt =
-            {
-                margin: 1,
-                filename: 'estimate_' + '.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            // New Promise-based usage:
-            html2pdf().set(opt).from(element).save();
-
-
-        });
-
-
-
-    });
-</script> -->
-
 
 
 <div class="row">
@@ -155,7 +113,7 @@
                     <a href="{% url 'render_challan_pdf' estimate.id %}" class="btn btn-dark m-1 text-white " 
                         data-toggle="tooltip" title="PDF" id="pdf">
                         <i class="mdi mdi-file-pdf-box"></i></a>
-                    <a href="" onclick="printDiv()" class="btn btn-dark m-1 text-white btn_print" 
+                    <a href="" onclick="printForm()" class="btn btn-dark m-1 text-white btn_print" 
                         data-toggle="tooltip" title="Print">
                         <i class="mdi mdi-printer"></i></a>
                     <a href="{% url 'emailattachment' %}" class="btn btn-dark m-1 text-white"
@@ -176,7 +134,7 @@
         </div>
 
         
-            <div class="slip p-5 mx-1 convert_to_pdf bg-light" id="whatToPrint"
+            <div class="slip p-5 mx-1 convert_to_pdf bg-light" id="selected-area"
                 style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
                
                 
@@ -207,21 +165,22 @@
                         <table class="table mt-2" style="border-color: black; color: black;">
                             <thead class="bg-secondary text-white">
                                 <tr>
-                                    <th class="text-center text-dark">#</th>
-                                    <th class="text-center text-dark">Item</th>
-                                    <th class="text-center text-dark">Quantity</th>
-                                    <th class="text-center text-dark">Rate</th>
-                                    <th class="text-center text-dark">Amount</th>
+                                    <th class="text-center text-dark" style="width: 200px;">#</th>
+                                    <th class="text-center text-dark" style="width: 200px;">Item</th>
+                                    <th class="text-center text-dark" style="width: 200px;">Quantity</th>
+                                    <th class="text-center text-dark" style="width: 200px;">Rate</th>
+                                    <th class="text-center text-dark" style="width: 200px;">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for item in items %}
-                                <tr>
-                                    <td  class="text-center">{{ forloop.counter }}</td>
-                                    <td class="text-center">{{ item.item_name }}</td>
-                                    <td class="text-center">{{ item.quantity }}</td>
-                                    <td class="text-center">{{ item.rate|floatformat:3 }}</td>
-                                    <td class="text-center">{{ item.amount|floatformat:3 }}</td>
+                                <tr> 
+                                    
+                                    <td  class="text-center" style="text-align: center">{{ forloop.counter }}</td>
+                                    <td class="text-center" style="text-align: center">{{ item.item_name }}</td>
+                                    <td class="text-center" style="text-align: center">{{ item.quantity }}</td>
+                                    <td class="text-center" style="text-align: center">{{ item.rate|floatformat:3 }}</td>
+                                    <td class="text-center" style="text-align: center">{{ item.amount|floatformat:3 }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -231,7 +190,7 @@
                 </div>
                 
                 <div class="row" >
-                    <div class="col-sm-6" style="padding-left: 55%; ">
+                    <div class="col-sm-6" style="padding-left: 75%;  margin-top: 1%;">
                         <table class="table" style="color: black">
                             <tr>
         
@@ -301,7 +260,6 @@
     </div>
 </div>
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <script>
     // Add click event listener to all rows with class "clickable-row"
@@ -316,45 +274,6 @@
     });
 </script>
 
-<script>
-
-    function print() {
-        var content = document.getElementById("whatToPrint");
-        var printWindow = window.open('', 'PrintWindow');
-        printWindow.document.write('<html><head><title>Print Selected Area</title></head><body>' + content + '</body></html>');
-        printWindow.print();
-        printWindow.close();
-
-
-    }
-</script>
-<script>
-    function openFilePicker() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.pdf'; // set the file type filter to only allow PDF files
-        input.addEventListener('change', () => {
-            const file = input.files[0];
-            // send the selected file to the server via AJAX
-            const formData = new FormData();
-            formData.append('file', file);
-            $.ajax({
-                url: '/send_email/',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    alert('File uploaded successfully');
-                },
-                error: function (xhr, status, error) {
-                    alert('Error uploading file: ' + error);
-                }
-            });
-        });
-        input.click();
-    }
-</script>
 
 
 

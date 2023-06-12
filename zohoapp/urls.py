@@ -134,6 +134,12 @@ urlpatterns = [
     path('render_challan_pdf/<int:id>',views.render_challan_pdf,name='render_challan_pdf'),
     path('deletechallan/<int:id>',views.deletechallan,name='deletechallan'),
 
+
+    # latest
+    path('filter_chellan',views.filter_chellan,name='filter_chellan'),
+    path('filter_chellan_type',views.filter_chellan_type,name='filter_chellan_type'),
+    
+    path('itemdata_challan',views.itemdata_challan,name='itemdata_challan'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

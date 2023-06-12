@@ -466,13 +466,7 @@ transition: transform 0.4s ,top 0.4s;
 <form method="POST" action="" enctype="multipart/form-data" novalidate
     id="forms">
     {% csrf_token %}
-    <div class="row mb-4 border-top pt-5">
-        <div class="col-sm-2"><label for="chellan_number">Delivery Challan#*</label></div>
-        <div class="col-sm-10"><input type="text" id="chellan_number" name="chellan_number" class=""
-                value="{{count}}" style="width: 38%;height: 35px;">
-            
-        </div>
-    </div>
+    
 
     <div class="row mb-4">
         <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
@@ -498,6 +492,14 @@ transition: transform 0.4s ,top 0.4s;
                 style="width: 50%;height: 35px;">
         </div>
     </div>
+
+    <div class="row mb-4 border-top pt-5">
+      <div class="col-sm-2"><label for="chellan_number">Delivery Challan#*</label></div>
+      <div class="col-sm-10"><input type="text" id="chellan_number" name="chellan_number" class=""
+              value="{{count}}" style="width: 38%;height: 35px;">
+          
+      </div>
+  </div>
     
     <div class="row mb-4">
         <div class="col-sm-2"><label for="reference">Reference#</label></div>
@@ -690,7 +692,7 @@ transition: transform 0.4s ,top 0.4s;
   <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
     <div class="modal-content modal-xl  p-5" style="background-color: #000000;">
       <div class="modal-header">
-        <h5 class="modal-title text-info">Create Item</h5>
+        <h3  class="mb-3  text-white  " style="font-size: 2rem;">New item</h3>
         <button type="button" class="close text-light" data-dismiss="modal" aria-label=""
           style="font-size: 20px;;background-color: #000000;border:none;">
           <span aria-hidden="true">&times;</span>
@@ -698,8 +700,8 @@ transition: transform 0.4s ,top 0.4s;
       </div>
       <div class="row   " >
    
-        <div class="col-md-12 " >
-            <h3  class="mb-3  text-white  " style="font-size: 2rem;">New item</h3>     
+        <div class="col-md-12 mt-3 " >
+                 
         
             
                 <fieldset class="form-group">
@@ -1760,7 +1762,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1792,7 +1794,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1824,7 +1826,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1856,7 +1858,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1888,7 +1890,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1920,7 +1922,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1952,7 +1954,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -1984,7 +1986,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2016,7 +2018,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2048,7 +2050,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2080,7 +2082,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2112,7 +2114,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2144,7 +2146,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2176,7 +2178,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2208,7 +2210,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2240,7 +2242,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2272,7 +2274,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2304,7 +2306,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2336,7 +2338,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2368,7 +2370,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
@@ -2400,7 +2402,7 @@ let popu=document.getElementById("popup-1");
             console.log(customer);
             $.ajax({
                 type: "GET",
-                url: "{% url 'itemdata_est' %}",
+                url: "{% url 'itemdata_challan' %}",
                 data: {
                     id: select,
                     cust: customer
