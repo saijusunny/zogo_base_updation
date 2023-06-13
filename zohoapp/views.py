@@ -2903,3 +2903,9 @@ def itemdata_challan(request):
         customerName=cust, user=user).placeofsupply
     return JsonResponse({"status": " not", 'place': place, 'rate': rate, 'pos': place_of_supply, 'gst': gst, 'igst': igst})
     return redirect('/')
+
+
+###################################################################### CHART OF ACCOUNT
+
+def chartofaccount_home(request):
+    return render(request,"chartofaccount_home.html" )
