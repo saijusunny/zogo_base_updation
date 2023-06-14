@@ -139,7 +139,7 @@ urlpatterns = [
 
 # Chart Of account
     path('chartofaccount_home',views.chartofaccount_home,name='chartofaccount_home'),
-
+    path('create_account',views.create_account,name='create_account'),
 
 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
