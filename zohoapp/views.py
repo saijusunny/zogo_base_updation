@@ -2934,3 +2934,31 @@ def create_account(request):
         return redirect('chartofaccount_home')
     return redirect('chartofaccount_home')
 
+def chartofaccount_view(request,id):
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+    view=Chart_of_Account.objects.filter(user=user)
+    ind=Chart_of_Account.objects.get(user=user, id=id)
+    print(view)
+    return render(request,"chartofaccount_view.html", {'view':view,'ind':ind}) 
+
+def create_account_view(request):
+    if request.method=='POST':
+        a=Chart_of_Account()
+        cur_user = request.user
+        user = User.objects.get(id=cur_user.id)
+        a.user = user
+        a.account_type = request.POST.get("account_type",None)
+        a.account_name = request.POST.get("account_name",None)
+        a.credit_no = request.POST.get("credit_number",None)
+        a.sub_account = request.POST.get("sub_account",None)
+        a.parent_account = request.POST.get("parent_account",None)
+        a.bank_account_no = request.POST.get("account_number",None)
+        a.currency = request.POST.get("currency",None)
+        a.account_code = request.POST.get("account_code",None)
+        a.description = request.POST.get("description",None)
+        a.watchlist = request.POST.get("watchlist",None)
+        a.status="inactive"
+        a.save()
+        return redirect('chartofaccount_home')
+    return redirect('chartofaccount_home')
